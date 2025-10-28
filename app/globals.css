@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-bg: #1a102b;
+  --secondary-bg: #2d1b4e;
+  --accent-color: #8a4fff;
+  --accent-light: #a67cff;
+  --accent-dark: #6b30e6;
+  --text-primary: #f0e6ff;
+  --text-secondary: #c2b0e6;
+  --border-color: #4a2d7a;
+  --card-bg: #35215a;
+  --success-color: #6fcf97;
+  --warning-color: #f2c94c;
+  --danger-color: #eb5757;
+  --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+  --admin-color: #ff6b6b;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-accent-dark to-accent-color text-white py-2.5 px-5 rounded-lg font-semibold cursor-pointer transition-all hover:translate-y-[-2px] hover:shadow-[0_6px_15px_rgba(138,79,255,0.3)];
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border border-border-color text-text-primary py-2.5 px-5 rounded-lg font-semibold cursor-pointer transition-all hover:bg-card-bg hover:border-accent-color;
+  }
+  
+  .btn-danger {
+    @apply bg-danger-color text-white py-2.5 px-5 rounded-lg font-semibold cursor-pointer transition-all hover:bg-red-600 hover:translate-y-[-2px];
+  }
+}
+@layer utilities {
+  .from-accent-dark {
+    /* Define the styles for this class here */
+  }
+}
+@layer base {
+  body {
+    @apply bg-primary-bg text-text-primary;
+  }
+}
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-primary-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-accent-dark rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-accent-color;
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}

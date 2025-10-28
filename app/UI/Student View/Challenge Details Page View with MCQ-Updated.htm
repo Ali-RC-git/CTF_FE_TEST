@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRDF Global - Challenge Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a102b;
+            --secondary-bg: #2d1b4e;
+            --accent-color: #8a4fff;
+            --accent-light: #a67cff;
+            --accent-dark: #6b30e6;
+            --text-primary: #f0e6ff;
+            --text-secondary: #c2b0e6;
+            --border-color: #4a2d7a;
+            --card-bg: #35215a;
+            --success-color: #6fcf97;
+            --warning-color: #f2c94c;
+            --danger-color: #eb5757;
+            --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+            --mcq-color: #4da6ff;
+            --fib-color: #ff9966;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .challenge-header {
+            flex: 1;
+        }
+        
+        .challenge-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        .challenge-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .difficulty {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .difficulty.medium {
+            background: rgba(242, 201, 76, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .points {
+            color: var(--accent-light);
+            font-weight: bold;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-hint {
+            background: rgba(138, 79, 255, 0.2);
+            border: 1px solid var(--accent-color);
+            color: var(--accent-light);
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .btn-hint:hover {
+            background: rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-hint:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .scenario-content, .artifacts-content, .questions-content {
+            line-height: 1.7;
+        }
+        
+        .scenario-content p, .artifacts-content p, .questions-content p {
+            margin-bottom: 15px;
+        }
+        
+        .highlight-box {
+            background: rgba(138, 79, 255, 0.1);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        
+        .artifacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .artifact-item {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .artifact-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .artifact-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+        
+        .artifact-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .question-item {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        
+        .question-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        
+        .question-points {
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        .question-content {
+            margin-bottom: 20px;
+        }
+        
+        .step-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .step-list li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .flag-format {
+            background: rgba(111, 207, 151, 0.1);
+            border: 1px solid var(--success-color);
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .flag-submission {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .submission-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .flag-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .flag-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .submission-feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .submission-feedback.correct {
+            background: rgba(111, 207, 151, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            display: block;
+        }
+        
+        .submission-feedback.incorrect {
+            background: rgba(235, 87, 87, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            display: block;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--primary-bg);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .resources-section {
+            margin-top: 30px;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .resource-item {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .resource-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .resource-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .timer {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .timer-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+        
+        .timer-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-light);
+            font-family: monospace;
+        }
+        
+        .completion-badge {
+            background: var(--success-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .hint-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(138, 79, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .hint-content {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(138, 79, 255, 0.05);
+            border-radius: 6px;
+        }
+        
+        .hint-content.active {
+            display: block;
+        }
+        
+        .attempts-counter {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+        
+        /* MCQ and FIB specific styles */
+        .question-type-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .mcq-badge {
+            background: rgba(77, 166, 255, 0.2);
+            color: var(--mcq-color);
+        }
+        
+        .fib-badge {
+            background: rgba(255, 153, 102, 0.2);
+            color: var(--fib-color);
+        }
+        
+        .mcq-options {
+            margin: 15px 0;
+        }
+        
+        .mcq-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 12px;
+            background: var(--secondary-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mcq-option:hover {
+            border-color: var(--mcq-color);
+            background: rgba(77, 166, 255, 0.05);
+        }
+        
+        .mcq-option.selected {
+            border-color: var(--mcq-color);
+            background: rgba(77, 166, 255, 0.1);
+        }
+        
+        .mcq-option input[type="radio"] {
+            margin-top: 2px;
+        }
+        
+        .fib-blanks {
+            margin: 15px 0;
+        }
+        
+        .fib-blank {
+            margin-bottom: 15px;
+        }
+        
+        .fib-blank label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .fib-blank input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+        }
+        
+        .fib-blank input:focus {
+            outline: none;
+            border-color: var(--fib-color);
+        }
+        
+        .mcq-fib-submission {
+            margin-top: 20px;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(138, 79, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            display: none;
+        }
+        
+        .explanation.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+            }
+            
+            .submission-form {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                CRDF Global
+            </div>
+            
+            <div class="challenge-header">
+                <h1 class="challenge-title">Midnight Credentials - OT Edition</h1>
+                <div class="challenge-meta">
+                    <div class="meta-item">
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>🔒</span>
+                        <span>OT/ICS Security</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>⏱️</span>
+                        <span>Estimated: 45-60 mins</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>🏆</span>
+                        <span class="points">5000 pts total</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="btn btn-secondary">
+                    <span>📋</span>
+                    Back to Challenges
+                </a>
+            </div>
+        </div>
+
+        <!-- Timer Section -->
+        <div class="timer">
+            <div class="timer-text">Time spent on this challenge:</div>
+            <div class="timer-value" id="challenge-timer">00:25:43</div>
+        </div>
+
+        <!-- Scenario Card -->
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-icon">🎯</span>
+                Scenario (OT/ICS Context)
+            </h2>
+            <div class="scenario-content">
+                <p>A water treatment plant's engineering workstation (which has access to PLC programming and HMI configuration) shows signs of unauthorized activity. An attacker appears to have used compromised credentials to log into an engineering workstation, elevated privileges, and accessed control-related files. The artifacts provided are offline and safe for training.</p>
+                
+                <div class="highlight-box">
+                    <strong>OT/ICS Context Notes:</strong>
+                    <ul class="step-list">
+                        <li>The engineering workstation is used by OT staff to manage PLC setpoints and HMI screens.</li>
+                        <li>Compromise of service accounts on this host can directly affect process control.</li>
+                        <li>For safety, all exercises are offline and use synthetic artifacts.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Artifacts Card -->
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-icon">📁</span>
+                Artifacts You Will Use
+            </h2>
+            <div class="artifacts-content">
+                <p>Download and analyze these files to solve the challenge:</p>
+                
+                <div class="artifacts-grid">
+                    <div class="artifact-item">
+                        <div class="artifact-name">wordlist_small.txt</div>
+                        <div class="artifact-desc">Password wordlist for cracking</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">john_input_rawmd5.txt</div>
+                        <div class="artifact-desc">MD5 hashes for password cracking</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">auth.log</div>
+                        <div class="artifact-desc">Authentication logs from engineering workstation</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">investigation_notes.txt</div>
+                        <div class="artifact-desc">Initial investigation findings</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">passwd_copy.txt</div>
+                        <div class="artifact-desc">User account information</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <span>📥</span>
+                        Download All Artifacts
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions Card -->
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-icon">❓</span>
+                Questions
+            </h2>
+            <div class="questions-content">
+                <div class="questions-list">
+                    <!-- Question 1 -->
+                    <div class="question-item">
+                        <div class="question-header">
+                            <div class="question-title">Q1. Crack the password for svc_backup</div>
+                            <div class="question-points">100 pts</div>
+                        </div>
+                        <div class="question-content">
+                            <p>Crack the password for svc_backup (an OT service account used for PLC backups) and submit the flag.</p>
+                            
+                            <div class="flag-format">
+                                Flag format: cracked_svc_backup_&lt;password&gt;
+                            </div>
+                            
+                            
+                            
+                            <div class="highlight-box">
+                                <strong>Why this matters:</strong> Compromised OT service accounts can be used to alter PLCs or exfiltrate control logic.
+                            </div>
+                        </div>
+                        
+                        <!-- Hint section for Q1 -->
+                        <div class="hint-section">
+                            <button class="btn btn-hint" id="hint-btn-1" onclick="getHint(1)">
+                                <span>💡</span>
+                                Get Hint (-25 pts)
+                            </button>
+                            <div class="hint-content" id="hint-content-1">
+                                <h4>Hints for Q1:</h4>
+                                <div id="hint-1-1" class="hint-item" style="display: none;">
+                                    <p><strong>Hint 1:</strong> Use the command: <code>john --format=raw-md5 --wordlist=wordlist_small.txt john_input_rawmd5.txt</code></p>
+                                </div>
+                                <div id="hint-1-2" class="hint-item" style="display: none;">
+                                    <p><strong>Hint 2:</strong> The password is related to the facility type (water treatment).</p>
+                                </div>
+                                <div id="hint-1-3" class="hint-item" style="display: none;">
+                                    <p><strong>Hint 3:</strong> The password is a common word followed by numbers.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flag-submission">
+                            <div class="submission-form">
+                                <input type="text" class="flag-input" placeholder="Enter flag: cracked_svc_backup_..." id="flag-input-1">
+                                <button class="btn btn-primary" onclick="submitFlag(1)">Submit Flag</button>
+                            </div>
+                            <div class="submission-feedback" id="feedback-1"></div>
+                            <div class="progress-indicator">
+                                <span>Status: </span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-1" style="width: 0%"></div>
+                                </div>
+                                <span id="status-1">Not attempted</span>
+                            </div>
+                            <div class="attempts-counter" id="attempts-1">Attempts remaining: 3</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="question-item">
+                        <div class="question-header">
+                            <div class="question-title">Q2. Identify Attacker IP Address</div>
+                            <div class="question-points">100 pts</div>
+                        </div>
+                        <div class="question-content">
+                            <p>Which IP did the attacker use to log in as svc_backup on the engineering workstation?</p>
+                            
+                            <div class="flag-format">
+                                Flag format: ip_&lt;address&gt;
+                            </div>
+                            
+                            
+                            
+                            <div class="highlight-box">
+                                <strong>Why this matters:</strong> Identifying the source helps isolate the intrusion path and block attacker access.
+                            </div>
+                        </div>
+                        
+                        <!-- Hint section for Q2 -->
+                        <div class="hint-section">
+                            <button class="btn btn-hint" id="hint-btn-2" onclick="getHint(2)">
+                                <span>💡</span>
+                                Get Hint (-25 pts)
+                            </button>
+                            <div class="hint-content" id="hint-content-2">
+                                <h4>Hints for Q2:</h4>
+                                <div id="hint-2-1" class="hint-item" style="display: none;">
+                                    <p><strong>Hint 1:</strong> Look for "Accepted password" entries in auth.log.</p>
+                                </div>
+                                <div id="hint-2-2" class="hint-item" style="display: none;">
+                                    <p><strong>Hint 2:</strong> The IP address is in the format xxx.xxx.xxx.xxx.</p>
+                                </div>
+                                <div id="hint-2-3" class="hint-item" style="display: none;">
+                                    <p><strong>Hint 3:</strong> The IP address starts with 192.168.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flag-submission">
+                            <div class="submission-form">
+                                <input type="text" class="flag-input" placeholder="Enter flag: ip_..." id="flag-input-2">
+                                <button class="btn btn-primary" onclick="submitFlag(2)">Submit Flag</button>
+                            </div>
+                            <div class="submission-feedback" id="feedback-2"></div>
+                            <div class="progress-indicator">
+                                <span>Status: </span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-2" style="width: 0%"></div>
+                                </div>
+                                <span id="status-2">Not attempted</span>
+                            </div>
+                            <div class="attempts-counter" id="attempts-2">Attempts remaining: 3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MCQ & Fill-in-the-Blank Questions Card -->
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-icon">📝</span>
+                Knowledge Assessment Questions
+            </h2>
+            <div class="questions-content">
+                <div class="questions-list">
+                    <!-- MCQ Example -->
+                    <div class="question-item">
+                        <div class="question-header">
+                            <div class="question-title">Q3. OT Security Best Practices <span class="question-type-badge mcq-badge">MCQ</span></div>
+                            <div class="question-points">100 pts</div>
+                        </div>
+                        <div class="question-content">
+                            <p>Which of the following is NOT a recommended security practice for OT environments?</p>
+                            
+                            <div class="mcq-options">
+                                <div class="mcq-option" onclick="selectOption(this, 'mcq1')">
+                                    <input type="radio" name="mcq1" id="mcq1-option1">
+                                    <label for="mcq1-option1">Network segmentation between IT and OT networks</label>
+                                </div>
+                                <div class="mcq-option" onclick="selectOption(this, 'mcq1')">
+                                    <input type="radio" name="mcq1" id="mcq1-option2">
+                                    <label for="mcq1-option2">Regular patching of all systems during production hours</label>
+                                </div>
+                                <div class="mcq-option" onclick="selectOption(this, 'mcq1')">
+                                    <input type="radio" name="mcq1" id="mcq1-option3">
+                                    <label for="mcq1-option3">Application whitelisting on engineering workstations</label>
+                                </div>
+                                <div class="mcq-option" onclick="selectOption(this, 'mcq1')">
+                                    <input type="radio" name="mcq1" id="mcq1-option4">
+                                    <label for="mcq1-option4">Monitoring for unauthorized network connections</label>
+                                </div>
+                            </div>
+                            
+                            <div class="explanation" id="explanation-mcq1">
+                                <strong>Explanation:</strong> Patching OT systems during production hours can cause unexpected downtime and should be scheduled during maintenance windows.
+                            </div>
+                        </div>
+                        
+                        <div class="mcq-fib-submission">
+                            <button class="btn btn-primary" onclick="submitMCQ('mcq1')">Submit Answer</button>
+                            <div class="submission-feedback" id="feedback-mcq1"></div>
+                            <div class="progress-indicator">
+                                <span>Status: </span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-mcq1" style="width: 0%"></div>
+                                </div>
+                                <span id="status-mcq1">Not attempted</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Fill-in-the-Blank Example -->
+                    <div class="question-item">
+                        <div class="question-header">
+                            <div class="question-title">Q4. PLC Security Concepts <span class="question-type-badge fib-badge">Fill-in-Blank</span></div>
+                            <div class="question-points">100 pts</div>
+                        </div>
+                        <div class="question-content">
+                            <p>Complete the following statements about PLC security:</p>
+                            
+                            <div class="fib-blanks">
+                                <div class="fib-blank">
+                                    <label>Programmable Logic Controllers (PLCs) are industrial computers used to control ______ processes.</label>
+                                    <input type="text" id="fib-blank1" placeholder="Enter your answer">
+                                </div>
+                                <div class="fib-blank">
+                                    <label>They are often targeted by attackers because they can directly manipulate ______ systems.</label>
+                                    <input type="text" id="fib-blank2" placeholder="Enter your answer">
+                                </div>
+                                <div class="fib-blank">
+                                    <label>The ______ protocol is commonly used to communicate with PLCs in industrial environments.</label>
+                                    <input type="text" id="fib-blank3" placeholder="Enter your answer">
+                                </div>
+                            </div>
+                            
+                            <div class="explanation" id="explanation-fib1">
+                                <strong>Explanation:</strong> PLCs control manufacturing processes and can manipulate physical systems. The Modbus protocol is widely used in industrial environments for PLC communication.
+                            </div>
+                        </div>
+                        
+                        <div class="mcq-fib-submission">
+                            <button class="btn btn-primary" onclick="submitFIB('fib1')">Submit Answers</button>
+                            <div class="submission-feedback" id="feedback-fib1"></div>
+                            <div class="progress-indicator">
+                                <span>Status: </span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fib1" style="width: 0%"></div>
+                                </div>
+                                <span id="status-fib1">Not attempted</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Card -->
+        <div class="card resources-section">
+            <h2 class="card-title">
+                <span class="card-icon">🛠️</span>
+                Tools & Resources
+            </h2>
+            <div class="resources-grid">
+                <a href="#" class="resource-item">
+                    <div class="resource-icon">🔍</div>
+                    <div>John the Ripper Guide</div>
+                </a>
+                <a href="#" class="resource-item">
+                    <div class="resource-icon">📖</div>
+                    <div>OT Security Basics</div>
+                </a>
+                <a href="#" class="resource-item">
+                    <div class="resource-icon">💬</div>
+                    <div>Challenge Discussion</div>
+                </a>
+                <a href="#" class="resource-item">
+                    <div class="resource-icon">🎥</div>
+                    <div>Video Walkthrough</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Completion Status -->
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-icon">📊</span>
+                Challenge Progress
+            </h2>
+            <div class="progress-indicator" style="align-items: center; margin: 0;">
+                <div class="progress-bar" style="height: 12px;">
+                    <div class="progress-fill" id="overall-progress" style="width: 0%"></div>
+                </div>
+                <span id="overall-status">0/240 points (0%)</span>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="complete-challenge" style="display: none;">
+                    <span>✅</span>
+                    Mark as Complete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Challenge state
+        const challengeState = {
+            q1: { 
+                solved: false, 
+                points: 30,
+                attempts: 3,
+                hintsUsed: 0,
+                hintPenalty: 0
+            },
+            q2: { 
+                solved: false, 
+                points: 10,
+                attempts: 3,
+                hintsUsed: 0,
+                hintPenalty: 0
+            },
+            mcq1: {
+                solved: false,
+                points: 100
+            },
+            fib1: {
+                solved: false,
+                points: 100
+            },
+            startTime: new Date(),
+            currentQuestion: 1
+        };
+
+        // Correct answers (for demo purposes - in real app, this would be server-side)
+        const correctAnswers = {
+            q1: "cracked_svc_backup_water123",
+            q2: "ip_192.168.1.205",
+            mcq1: "mcq1-option2",
+            fib1: {
+                blank1: "manufacturing",
+                blank2: "physical",
+                blank3: "Modbus"
+            }
+        };
+
+        // Acceptable variations for FIB answers
+        const acceptableVariations = {
+            fib1: {
+                blank1: ["manufacturing", "production", "industrial"],
+                blank2: ["physical", "industrial control", "ICS"],
+                blank3: ["Modbus", "modbus"]
+            }
+        };
+
+        // Timer functionality
+        function updateTimer() {
+            const now = new Date();
+            const diff = Math.floor((now - challengeState.startTime) / 1000);
+            const hours = Math.floor(diff / 3600);
+            const minutes = Math.floor((diff % 3600) / 60);
+            const seconds = diff % 60;
+            
+            const timerElement = document.getElementById('challenge-timer');
+            timerElement.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
+        // Flag submission function
+        function submitFlag(questionNumber) {
+            const inputElement = document.getElementById(`flag-input-${questionNumber}`);
+            const feedbackElement = document.getElementById(`feedback-${questionNumber}`);
+            const progressElement = document.getElementById(`progress-${questionNumber}`);
+            const statusElement = document.getElementById(`status-${questionNumber}`);
+            const attemptsElement = document.getElementById(`attempts-${questionNumber}`);
+            const button = inputElement.nextElementSibling;
+            
+            const userAnswer = inputElement.value.trim();
+            const correctAnswer = correctAnswers[`q${questionNumber}`];
+            
+            if (!userAnswer) {
+                alert('Please enter a flag before submitting.');
+                return;
+            }
+            
+            // Check if user has attempts remaining
+            if (challengeState[`q${questionNumber}`].attempts <= 0) {
+                alert('No attempts remaining for this question.');
+                return;
+            }
+            
+            // Disable input and button during submission
+            inputElement.disabled = true;
+            button.disabled = true;
+            button.innerHTML = '<span>⏳</span> Checking...';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+                
+                if (isCorrect) {
+                    // Mark as solved
+                    challengeState[`q${questionNumber}`].solved = true;
+                    
+                    // Calculate points after hint deductions
+                    const pointsAfterPenalty = Math.max(0, challengeState[`q${questionNumber}`].points - challengeState[`q${questionNumber}`].hintPenalty);
+                    
+                    // Update UI
+                    feedbackElement.textContent = `✓ Correct! Flag accepted. ${pointsAfterPenalty} points awarded.`;
+                    feedbackElement.className = 'submission-feedback correct';
+                    progressElement.style.width = '100%';
+                    statusElement.textContent = 'Solved';
+                    statusElement.style.color = 'var(--success-color)';
+                    
+                    // Disable input and button
+                    inputElement.disabled = true;
+                    button.disabled = true;
+                    button.innerHTML = '<span>✅</span> Solved';
+                    
+                    // Update overall progress
+                    updateOverallProgress();
+                    
+                    // Move to next question if available
+                    if (questionNumber < 2) {
+                        setTimeout(() => {
+                            document.getElementById(`flag-input-${questionNumber + 1}`).focus();
+                        }, 500);
+                    }
+                } else {
+                    // Decrement attempts
+                    challengeState[`q${questionNumber}`].attempts--;
+                    
+                    feedbackElement.textContent = `✗ Incorrect flag. ${challengeState[`q${questionNumber}`].attempts} attempts remaining.`;
+                    feedbackElement.className = 'submission-feedback incorrect';
+                    
+                    // Update attempts counter
+                    attemptsElement.textContent = `Attempts remaining: ${challengeState[`q${questionNumber}`].attempts}`;
+                    
+                    // If no attempts left, disable input and button
+                    if (challengeState[`q${questionNumber}`].attempts <= 0) {
+                        inputElement.disabled = true;
+                        button.disabled = true;
+                        button.innerHTML = '<span>❌</span> No attempts left';
+                        feedbackElement.textContent = '✗ No attempts remaining. Moving to next question.';
+                        
+                        // Move to next question if available
+                        if (questionNumber < 2) {
+                            setTimeout(() => {
+                                document.getElementById(`flag-input-${questionNumber + 1}`).focus();
+                            }, 1500);
+                        }
+                    } else {
+                        // Re-enable input for retry
+                        inputElement.disabled = false;
+                        button.disabled = false;
+                        button.innerHTML = '<span>🚩</span> Submit Flag';
+                    }
+                }
+            }, 1500);
+        }
+
+        // Get hint function
+        function getHint(questionNumber) {
+            const hintBtn = document.getElementById(`hint-btn-${questionNumber}`);
+            const hintContent = document.getElementById(`hint-content-${questionNumber}`);
+            const currentHintsUsed = challengeState[`q${questionNumber}`].hintsUsed;
+            
+            if (currentHintsUsed >= 3) {
+                alert('You have used all available hints for this question.');
+                return;
+            }
+            
+            if (confirm('Using a hint will cost 25 points. Continue?')) {
+                // Apply penalty
+                challengeState[`q${questionNumber}`].hintsUsed++;
+                challengeState[`q${questionNumber}`].hintPenalty += 25;
+                
+                // Show hint content if not already shown
+                hintContent.classList.add('active');
+                
+                // Show the appropriate hint
+                document.getElementById(`hint-${questionNumber}-${currentHintsUsed + 1}`).style.display = 'block';
+                
+                // Update hint button text
+                hintBtn.innerHTML = `<span>💡</span> Get Hint (-25 pts) (${3 - challengeState[`q${questionNumber}`].hintsUsed} remaining)`;
+                
+                // Disable button if all hints used
+                if (challengeState[`q${questionNumber}`].hintsUsed >= 3) {
+                    hintBtn.disabled = true;
+                }
+                
+                // Update overall progress to reflect point deduction
+                updateOverallProgress();
+            }
+        }
+
+        // MCQ functionality
+        function selectOption(optionElement, questionId) {
+            // Deselect all options in this question
+            const options = document.querySelectorAll(`.mcq-option input[name="${questionId}"]`);
+            options.forEach(opt => {
+                opt.checked = false;
+                opt.parentElement.classList.remove('selected');
+            });
+            
+            // Select the clicked option
+            const radio = optionElement.querySelector('input[type="radio"]');
+            radio.checked = true;
+            optionElement.classList.add('selected');
+        }
+
+        function submitMCQ(questionId) {
+            const feedbackElement = document.getElementById(`feedback-${questionId}`);
+            const progressElement = document.getElementById(`progress-${questionId}`);
+            const statusElement = document.getElementById(`status-${questionId}`);
+            const explanationElement = document.getElementById(`explanation-${questionId}`);
+            const button = document.querySelector(`#feedback-${questionId}`).previousElementSibling;
+            
+            const selectedOption = document.querySelector(`input[name="${questionId}"]:checked`);
+            
+            if (!selectedOption) {
+                alert('Please select an answer before submitting.');
+                return;
+            }
+            
+            // Disable button during submission
+            button.disabled = true;
+            button.innerHTML = '<span>⏳</span> Checking...';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                const isCorrect = selectedOption.id === correctAnswers[questionId];
+                
+                if (isCorrect) {
+                    // Mark as solved
+                    challengeState[questionId].solved = true;
+                    
+                    // Update UI
+                    feedbackElement.textContent = `✓ Correct! ${challengeState[questionId].points} points awarded.`;
+                    feedbackElement.className = 'submission-feedback correct';
+                    progressElement.style.width = '100%';
+                    statusElement.textContent = 'Solved';
+                    statusElement.style.color = 'var(--success-color)';
+                    
+                    // Disable all options and button
+                    const options = document.querySelectorAll(`.mcq-option input[name="${questionId}"]`);
+                    options.forEach(opt => {
+                        opt.disabled = true;
+                    });
+                    button.disabled = true;
+                    button.innerHTML = '<span>✅</span> Solved';
+                    
+                    // Show explanation
+                    explanationElement.classList.add('active');
+                    
+                    // Update overall progress
+                    updateOverallProgress();
+                } else {
+                    feedbackElement.textContent = '✗ Incorrect answer. Please try again.';
+                    feedbackElement.className = 'submission-feedback incorrect';
+                    
+                    // Re-enable button for retry
+                    button.disabled = false;
+                    button.innerHTML = 'Submit Answer';
+                    
+                    // Show explanation
+                    explanationElement.classList.add('active');
+                }
+            }, 1500);
+        }
+
+        // Fill-in-the-Blank functionality
+        function submitFIB(questionId) {
+            const feedbackElement = document.getElementById(`feedback-${questionId}`);
+            const progressElement = document.getElementById(`progress-${questionId}`);
+            const statusElement = document.getElementById(`status-${questionId}`);
+            const explanationElement = document.getElementById(`explanation-${questionId}`);
+            const button = document.querySelector(`#feedback-${questionId}`).previousElementSibling;
+            
+            // Get all blank inputs
+            const blankInputs = document.querySelectorAll(`#${questionId} input[type="text"]`);
+            let allFilled = true;
+            
+            // Check if all blanks are filled
+            blankInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                }
+            });
+            
+            if (!allFilled) {
+                alert('Please fill in all blanks before submitting.');
+                return;
+            }
+            
+            // Disable button during submission
+            button.disabled = true;
+            button.innerHTML = '<span>⏳</span> Checking...';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                let allCorrect = true;
+                let incorrectBlanks = [];
+                
+                // Check each blank
+                blankInputs.forEach((input, index) => {
+                    const blankId = `blank${index + 1}`;
+                    const userAnswer = input.value.trim().toLowerCase();
+                    const correctAnswer = correctAnswers[questionId][blankId].toLowerCase();
+                    const variations = acceptableVariations[questionId][blankId].map(v => v.toLowerCase());
+                    
+                    // Check if answer matches correct answer or any acceptable variations
+                    const isCorrect = userAnswer === correctAnswer || variations.includes(userAnswer);
+                    
+                    if (!isCorrect) {
+                        allCorrect = false;
+                        incorrectBlanks.push(blankId);
+                    }
+                });
+                
+                if (allCorrect) {
+                    // Mark as solved
+                    challengeState[questionId].solved = true;
+                    
+                    // Update UI
+                    feedbackElement.textContent = `✓ Correct! ${challengeState[questionId].points} points awarded.`;
+                    feedbackElement.className = 'submission-feedback correct';
+                    progressElement.style.width = '100%';
+                    statusElement.textContent = 'Solved';
+                    statusElement.style.color = 'var(--success-color)';
+                    
+                    // Disable all inputs and button
+                    blankInputs.forEach(input => {
+                        input.disabled = true;
+                    });
+                    button.disabled = true;
+                    button.innerHTML = '<span>✅</span> Solved';
+                    
+                    // Show explanation
+                    explanationElement.classList.add('active');
+                    
+                    // Update overall progress
+                    updateOverallProgress();
+                } else {
+                    feedbackElement.textContent = `✗ Some answers are incorrect. Please check blanks: ${incorrectBlanks.join(', ')}`;
+                    feedbackElement.className = 'submission-feedback incorrect';
+                    
+                    // Re-enable button for retry
+                    button.disabled = false;
+                    button.innerHTML = 'Submit Answers';
+                    
+                    // Show explanation
+                    explanationElement.classList.add('active');
+                }
+            }, 1500);
+        }
+
+        // Update overall progress
+        function updateOverallProgress() {
+            const totalPoints = 240; // 30 + 10 + 100 + 100
+            let earnedPoints = 0;
+            let solvedCount = 0;
+            
+            // Check all questions
+            Object.keys(challengeState).forEach(key => {
+                if (key.startsWith('q') || key.startsWith('mcq') || key.startsWith('fib')) {
+                    if (challengeState[key].solved) {
+                        if (key.startsWith('q')) {
+                            // For flag questions, deduct hint penalties
+                            earnedPoints += Math.max(0, challengeState[key].points - challengeState[key].hintPenalty);
+                        } else {
+                            // For MCQ and FIB, award full points
+                            earnedPoints += challengeState[key].points;
+                        }
+                        solvedCount++;
+                    }
+                }
+            });
+            
+            const progressPercentage = (earnedPoints / totalPoints) * 100;
+            
+            // Update progress bar
+            document.getElementById('overall-progress').style.width = `${progressPercentage}%`;
+            document.getElementById('overall-status').textContent = 
+                `${earnedPoints}/${totalPoints} points (${Math.round(progressPercentage)}%)`;
+            
+            // Show complete button if all questions solved
+            if (solvedCount === 4) {
+                document.getElementById('complete-challenge').style.display = 'flex';
+            }
+        }
+
+        // Complete challenge
+        document.getElementById('complete-challenge').addEventListener('click', function() {
+            const timeSpent = document.getElementById('challenge-timer').textContent;
+            let earnedPoints = 0;
+            
+            // Calculate total points
+            Object.keys(challengeState).forEach(key => {
+                if (key.startsWith('q') || key.startsWith('mcq') || key.startsWith('fib')) {
+                    if (challengeState[key].solved) {
+                        if (key.startsWith('q')) {
+                            // For flag questions, deduct hint penalties
+                            earnedPoints += Math.max(0, challengeState[key].points - challengeState[key].hintPenalty);
+                        } else {
+                            // For MCQ and FIB, award full points
+                            earnedPoints += challengeState[key].points;
+                        }
+                    }
+                }
+            });
+            
+            alert(`Challenge completed! Time spent: ${timeSpent}\nTotal points: ${earnedPoints}/240\nReturning to challenges list...`);
+            // In real app, this would redirect to challenges page
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Challenge detail page loaded');
+            updateOverallProgress();
+        });
+    </script>
+</body>
+</html>

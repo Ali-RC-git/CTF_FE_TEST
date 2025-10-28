@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRDF Global - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a102b;
+            --secondary-bg: #8a4fff;
+            --accent-color: #8a4fff;
+            --accent-light: #a67cff;
+            --accent-dark: #6b30e6;
+            --text-primary: #f0e6ff;
+            --text-secondary: #c2b0e6;
+            --border-color: #4a2d7a;
+            --card-bg: #35215a;
+            --success-color: #6fcf97;
+            --warning-color: #f2c94c;
+            --danger-color: #eb5757;
+            --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+            --admin-color: #ff6b6b;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--secondary-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-primary);
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .admin-badge {
+            background: var(--admin-color);
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+        
+        .nav-menu {
+            flex: 1;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: rgba(138, 79, 255, 0.1);
+            color: var(--text-primary);
+        }
+        
+        .nav-item.active {
+            background: rgba(138, 79, 255, 0.15);
+            color: var(--accent-light);
+            border-left-color: var(--accent-color);
+        }
+        
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        .nav-label {
+            font-weight: 500;
+        }
+        
+        .user-info {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            color: var(--danger-color);
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d93636;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 20px;
+        }
+        
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .stat-trend {
+            margin-top: 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .trend-up {
+            color: var(--success-color);
+        }
+        
+        .trend-down {
+            color: var(--danger-color);
+        }
+        
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: rgba(111, 207, 151, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background: rgba(235, 87, 87, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .status-pending {
+            background: rgba(242, 201, 76, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.3s;
+            padding: 5px;
+        }
+        
+        .action-btn:hover {
+            color: var(--accent-light);
+        }
+        
+        .action-btn.delete:hover {
+            color: var(--danger-color);
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--accent-light);
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal {
+            background: var(--card-bg);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .nav-item.active {
+                border-left: none;
+                border-bottom-color: var(--accent-color);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                CRDF Global <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="users">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-label">User Management</span>
+                </a>
+                <a href="#" class="nav-item" data-page="challenges">
+                    <span class="nav-icon">🎯</span>
+                    <span class="nav-label">Challenge Management</span>
+                </a>
+                <a href="#" class="nav-item" data-page="analytics">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-label">Analytics</span>
+                </a>
+                <a href="#" class="nav-item" data-page="scoreboard">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-label">Scoreboard Management</span>
+                </a>
+                <a href="#" class="nav-item" data-page="system">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">System Settings</span>
+                </a>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">AJ</div>
+                <div class="user-details">
+                    <div class="user-name">Admin Johnson</div>
+                    <div class="user-role">Super Administrator</div>
+                </div>
+                <button class="logout-btn" title="Logout">🚪</button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page active">
+                <div class="page-header">
+                    <h1 class="page-title">Admin Dashboard</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <span>📥</span>
+                            Export Data
+                        </button>
+                        <button class="btn btn-primary">
+                            <span>➕</span>
+                            Quick Add Challenge
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Stats Overview -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-trend trend-up">
+                            <span>↗</span>
+                            <span>12% increase this month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Active Challenges</div>
+                        <div class="stat-trend trend-up">
+                            <span>↗</span>
+                            <span>3 new this week</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">78%</div>
+                        <div class="stat-label">Completion Rate</div>
+                        <div class="stat-trend trend-down">
+                            <span>↘</span>
+                            <span>2% decrease from last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3.2k</div>
+                        <div class="stat-label">Flag Submissions Today</div>
+                        <div class="stat-trend trend-up">
+                            <span>↗</span>
+                            <span>15% increase</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="card-icon">🔄</span>
+                        Recent Activity
+                    </h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Challenge</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>john.doe@example.com</td>
+                                    <td>Completed challenge</td>
+                                    <td>Midnight Credentials - OT Edition</td>
+                                    <td>10:23 AM</td>
+                                    <td><span class="status-badge status-active">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>sarah.connor@example.com</td>
+                                    <td>Started challenge</td>
+                                    <td>PLC Manipulation</td>
+                                    <td>09:45 AM</td>
+                                    <td><span class="status-badge status-pending">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td>mike.smith@example.com</td>
+                                    <td>Submitted flag</td>
+                                    <td>HMI Exploitation</td>
+                                    <td>09:12 AM</td>
+                                    <td><span class="status-badge status-active">Correct</span></td>
+                                </tr>
+                                <tr>
+                                    <td>lisa.jones@example.com</td>
+                                    <td>Requested hint</td>
+                                    <td>Network Segmentation</td>
+                                    <td>08:56 AM</td>
+                                    <td><span class="status-badge status-pending">Hint Used</span></td>
+                                </tr>
+                                <tr>
+                                    <td>admin@crdf.org</td>
+                                    <td>Created challenge</td>
+                                    <td>SCADA Protocol Analysis</td>
+                                    <td>Yesterday</td>
+                                    <td><span class="status-badge status-active">Published</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- System Health -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="card-icon">❤️</span>
+                        System Health
+                    </h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="stat-card">
+                                <div class="stat-value">98%</div>
+                                <div class="stat-label">Uptime</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="stat-card">
+                                <div class="stat-value">2.4 GB</div>
+                                <div class="stat-label">Memory Usage</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="stat-card">
+                                <div class="stat-value">42%</div>
+                                <div class="stat-label">CPU Load</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="stat-card">
+                                <div class="stat-value">1.2 TB</div>
+                                <div class="stat-label">Storage Used</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Management Page -->
+            <div id="users" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">User Management</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <span>📥</span>
+                            Export Users
+                        </button>
+                        <button class="btn btn-primary" id="add-user-btn">
+                            <span>➕</span>
+                            Add User
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="all-users">All Users</div>
+                        <div class="tab" data-tab="students">Students</div>
+                        <div class="tab" data-tab="instructors">Instructors</div>
+                        <div class="tab" data-tab="admins">Administrators</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="all-users">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Joined</th>
+                                        <th>Last Active</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>John Doe</td>
+                                        <td>john.doe@example.com</td>
+                                        <td>Student</td>
+                                        <td>Jan 15, 2023</td>
+                                        <td>Today, 10:23 AM</td>
+                                        <td><span class="status-badge status-active">Active</span></td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sarah Connor</td>
+                                        <td>sarah.connor@example.com</td>
+                                        <td>Instructor</td>
+                                        <td>Mar 22, 2023</td>
+                                        <td>Today, 09:45 AM</td>
+                                        <td><span class="status-badge status-active">Active</span></td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mike Smith</td>
+                                        <td>mike.smith@example.com</td>
+                                        <td>Student</td>
+                                        <td>Feb 10, 2023</td>
+                                        <td>Today, 09:12 AM</td>
+                                        <td><span class="status-badge status-active">Active</span></td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lisa Jones</td>
+                                        <td>lisa.jones@example.com</td>
+                                        <td>Student</td>
+                                        <td>Apr 5, 2023</td>
+                                        <td>Today, 08:56 AM</td>
+                                        <td><span class="status-badge status-inactive">Inactive</span></td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Admin Johnson</td>
+                                        <td>admin@crdf.org</td>
+                                        <td>Administrator</td>
+                                        <td>Dec 1, 2022</td>
+                                        <td>Yesterday, 05:30 PM</td>
+                                        <td><span class="status-badge status-active">Active</span></td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Challenge Management Page -->
+            <div id="challenges" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">Challenge Management</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <span>📥</span>
+                            Export Challenges
+                        </button>
+                        <button class="btn btn-primary" id="add-challenge-btn">
+                            <span>➕</span>
+                            Create Challenge
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="all-challenges">All Challenges</div>
+                        <div class="tab" data-tab="published">Published</div>
+                        <div class="tab" data-tab="drafts">Drafts</div>
+                        <div class="tab" data-tab="archived">Archived</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="all-challenges">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Difficulty</th>
+                                        <th>Points</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Submissions</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Midnight Credentials - OT Edition</td>
+                                        <td>OT/ICS Security</td>
+                                        <td>Medium</td>
+                                        <td>40</td>
+                                        <td><span class="status-badge status-active">Published</span></td>
+                                        <td>Mar 10, 2023</td>
+                                        <td>247</td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn" title="View">👁️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PLC Manipulation</td>
+                                        <td>OT/ICS Security</td>
+                                        <td>Hard</td>
+                                        <td>75</td>
+                                        <td><span class="status-badge status-active">Published</span></td>
+                                        <td>Feb 28, 2023</td>
+                                        <td>189</td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn" title="View">👁️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HMI Exploitation</td>
+                                        <td>OT/ICS Security</td>
+                                        <td>Medium</td>
+                                        <td>50</td>
+                                        <td><span class="status-badge status-pending">Draft</span></td>
+                                        <td>Apr 5, 2023</td>
+                                        <td>0</td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn" title="View">👁️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Network Segmentation</td>
+                                        <td>OT/ICS Security</td>
+                                        <td>Easy</td>
+                                        <td>25</td>
+                                        <td><span class="status-badge status-active">Published</span></td>
+                                        <td>Jan 15, 2023</td>
+                                        <td>312</td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn" title="View">👁️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>SCADA Protocol Analysis</td>
+                                        <td>OT/ICS Security</td>
+                                        <td>Hard</td>
+                                        <td>80</td>
+                                        <td><span class="status-badge status-inactive">Archived</span></td>
+                                        <td>Dec 5, 2022</td>
+                                        <td>156</td>
+                                        <td class="action-cell">
+                                            <button class="action-btn" title="Edit">✏️</button>
+                                            <button class="action-btn" title="View">👁️</button>
+                                            <button class="action-btn delete" title="Delete">🗑️</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Page -->
+            <div id="analytics" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">Analytics</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <span>📥</span>
+                            Export Report
+                        </button>
+                        <button class="btn btn-primary">
+                            <span>🔄</span>
+                            Refresh Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="card-icon">📈</span>
+                        Challenge Completion Rates
+                    </h2>
+                    <div class="chart-container">
+                        <!-- Chart would be rendered here in a real application -->
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--secondary-bg); border-radius: 8px;">
+                            <p>Challenge Completion Chart Visualization</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="card">
+                            <h2 class="card-title">
+                                <span class="card-icon">👥</span>
+                                User Engagement
+                            </h2>
+                            <div class="chart-container">
+                                <!-- Chart would be rendered here in a real application -->
+                                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--secondary-bg); border-radius: 8px;">
+                                    <p>User Engagement Chart Visualization</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="card">
+                            <h2 class="card-title">
+                                <span class="card-icon">🎯</span>
+                                Difficulty Distribution
+                            </h2>
+                            <div class="chart-container">
+                                <!-- Chart would be rendered here in a real application -->
+                                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--secondary-bg); border-radius: 8px;">
+                                    <p>Difficulty Distribution Chart Visualization</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System Settings Page -->
+            <div id="system" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">System Settings</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <span>🔄</span>
+                            Reset to Defaults
+                        </button>
+                        <button class="btn btn-primary" id="save-settings-btn">
+                            <span>💾</span>
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="card-icon">🌐</span>
+                        General Settings
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Platform Name</label>
+                        <input type="text" class="form-control" value="CRDF Global Training Platform">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Platform Description</label>
+                        <textarea class="form-control">Advanced OT/ICS cybersecurity training platform for critical infrastructure protection.</textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Default User Role</label>
+                            <select class="form-control">
+                                <option>Student</option>
+                                <option selected>Instructor</option>
+                                <option>Administrator</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Registration Policy</label>
+                            <select class="form-control">
+                                <option>Open Registration</option>
+                                <option selected>Invite Only</option>
+                                <option>Admin Approval Required</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="card-icon">🔐</span>
+                        Security Settings
+                    </h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Password Policy</label>
+                            <select class="form-control">
+                                <option>Low (6+ characters)</option>
+                                <option selected>Medium (8+ characters, mixed case)</option>
+                                <option>High (12+ characters, mixed case + numbers + symbols)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Session Timeout</label>
+                            <select class="form-control">
+                                <option>15 minutes</option>
+                                <option selected>30 minutes</option>
+                                <option>1 hour</option>
+                                <option>4 hours</option>
+                                <option>Never (until browser closed)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" checked> Require email verification for new accounts
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" checked> Enable two-factor authentication for administrators
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox"> Enable two-factor authentication for all users
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="card-icon">📧</span>
+                        Email Settings
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">System Email Address</label>
+                        <input type="email" class="form-control" value="noreply@crdfglobal.org">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">SMTP Server</label>
+                        <input type="text" class="form-control" value="smtp.crdfglobal.org">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">SMTP Port</label>
+                            <input type="number" class="form-control" value="587">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Encryption</label>
+                            <select class="form-control">
+                                <option>None</option>
+                                <option selected>STARTTLS</option>
+                                <option>SSL/TLS</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div class="modal-overlay" id="add-user-modal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New User</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" placeholder="Enter full name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" placeholder="Enter email address">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <select class="form-control">
+                            <option>Student</option>
+                            <option>Instructor</option>
+                            <option>Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-control">
+                            <option>Active</option>
+                            <option>Inactive</option>
+                            <option>Pending</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Send Welcome Email</label>
+                    <input type="checkbox" checked> Send account details to user via email
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close">Cancel</button>
+                <button class="btn btn-primary">Create User</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Challenge Modal -->
+    <div class="modal-overlay" id="add-challenge-modal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Challenge</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Challenge Title</label>
+                    <input type="text" class="form-control" placeholder="Enter challenge title">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-control">
+                        <option>OT/ICS Security</option>
+                        <option>Network Security</option>
+                        <option>Web Application Security</option>
+                        <option>Digital Forensics</option>
+                        <option>Cryptography</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Difficulty</label>
+                        <select class="form-control">
+                            <option>Easy</option>
+                            <option selected>Medium</option>
+                            <option>Hard</option>
+                            <option>Expert</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Points</label>
+                        <input type="number" class="form-control" value="40" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Challenge Description</label>
+                    <textarea class="form-control" placeholder="Describe the challenge scenario..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Initial Status</label>
+                    <select class="form-control">
+                        <option>Draft</option>
+                        <option>Published</option>
+                        <option>Archived</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close">Cancel</button>
+                <button class="btn btn-primary">Create Challenge</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show corresponding page
+                const pageId = this.getAttribute('data-page');
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+        
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab
+                this.parentElement.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show corresponding content
+                this.closest('.card').querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Modals
+        function setupModal(openBtnId, modalId) {
+            const openBtn = document.getElementById(openBtnId);
+            const modal = document.getElementById(modalId);
+            const closeBtns = modal.querySelectorAll('.modal-close');
+            
+            if (openBtn) {
+                openBtn.addEventListener('click', () => {
+                    modal.style.display = 'flex';
+                });
+            }
+            
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Initialize modals
+        setupModal('add-user-btn', 'add-user-modal');
+        setupModal('add-challenge-btn', 'add-challenge-modal');
+        
+        // Save settings
+        document.getElementById('save-settings-btn').addEventListener('click', () => {
+            alert('Settings saved successfully!');
+        });
+        
+        // Delete actions
+        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
+                    // In a real app, this would make an API call to delete the item
+                    const row = this.closest('tr');
+                    row.style.opacity = '0.5';
+                    setTimeout(() => {
+                        row.remove();
+                    }, 500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

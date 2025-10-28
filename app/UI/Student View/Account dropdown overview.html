@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Dropdown Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-header:hover {
+            background-color: #f9f9f9;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-email {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .dropdown-icon {
+            color: #777;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .dropdown-menu.active {
+            max-height: 500px;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f9ff;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-icon {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            color: #6a11cb;
+        }
+
+        .menu-text {
+            flex: 1;
+            color: #333;
+        }
+
+        .menu-badge {
+            background-color: #6a11cb;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.active {
+            background-color: #6a11cb;
+        }
+
+        .toggle-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+
+        .toggle-switch.active .toggle-knob {
+            left: 22px;
+        }
+
+        .logout {
+            color: #e74c3c;
+        }
+
+        .logout .menu-icon {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dropdown-header" id="dropdownHeader">
+            <div class="avatar">JS</div>
+            <div class="user-info">
+                <div class="user-name">John Smith</div>
+                <div class="user-email">john.smith@example.com</div>
+            </div>
+            <div class="dropdown-icon">▼</div>
+        </div>
+        
+        <div class="dropdown-menu" id="dropdownMenu">
+            <div class="menu-item">
+                <div class="menu-icon">👤</div>
+                <div class="menu-text">View Profile</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-icon">⚙️</div>
+                <div class="menu-text">Manage Account</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-icon">🔔</div>
+                <div class="menu-text">Dark Mode</div>
+                <div class="toggle-switch" id="darkModeToggle">
+                    <div class="toggle-knob"></div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-icon">🏆</div>
+                <div class="menu-text">Badges</div>
+                <div class="menu-badge">3</div>
+            </div>
+            <div class="menu-item logout">
+                <div class="menu-icon">🚪</div>
+                <div class="menu-text">Log Out</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownHeader = document.getElementById('dropdownHeader');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const dropdownIcon = document.querySelector('.dropdown-icon');
+            
+            // Toggle dropdown menu
+            dropdownHeader.addEventListener('click', function() {
+                dropdownMenu.classList.toggle('active');
+                dropdownIcon.style.transform = dropdownMenu.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
+            });
+            
+            // Toggle dark mode
+            darkModeToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                darkModeToggle.classList.toggle('active');
+                
+                if (darkModeToggle.classList.contains('active')) {
+                    document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #3498db 100%)';
+                } else {
+                    document.body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+                }
+            });
+            
+            // Menu item click handlers
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const text = this.querySelector('.menu-text').textContent;
+                    
+                    if (text === 'View Profile') {
+                        alert('Opening profile page...');
+                    } else if (text === 'Manage Account') {
+                        alert('Opening account settings...');
+                    } else if (text === 'Badges') {
+                        alert('Displaying your badges...');
+                    } else if (text === 'Log Out') {
+                        alert('Logging out...');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

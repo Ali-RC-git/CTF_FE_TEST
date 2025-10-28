@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Next.js Frontend Application
+  ctf-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    volumes:
+      # Mount environment file if it exists
+      - ./.env:/app/.env:ro
+    restart: unless-stopped
+    networks:
+      - ctf-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx Reverse Proxy (Optional - for production)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - ctf-ui
+    restart: unless-stopped
+    networks:
+      - ctf-network
+    profiles:
+      - production
+
+networks:
+  ctf-network:
+    driver: bridge
+
+volumes:
+  # Add any persistent volumes here if needed
+  ctf-data:
+
+

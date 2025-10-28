@@ -1,0 +1,2985 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRDF Global - Cybersecurity Training Platform</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a102b;
+            --secondary-bg: #2d1b4e;
+            --accent-color: #8a4fff;
+            --accent-light: #a67cff;
+            --accent-dark: #6b30e6;
+            --text-primary: #f0e6ff;
+            --text-secondary: #c2b0e6;
+            --border-color: #4a2d7a;
+            --card-bg: #35215a;
+            --success-color: #6fcf97;
+            --warning-color: #f2c94c;
+            --danger-color: #eb5757;
+            --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--secondary-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 25px;
+        }
+        
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--accent-light);
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--gradient);
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .role-badge {
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            padding: 30px 0;
+            min-height: calc(100vh - 140px);
+        }
+        
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        /* Dashboard Styles */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid var(--accent-color);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--accent-light);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .challenge-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .category-card {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 8px 20px rgba(138, 79, 255, 0.1);
+        }
+        
+        .category-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+        
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--secondary-bg);
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(138, 79, 255, 0.05);
+        }
+        
+        /* Difficulty Indicators */
+        .difficulty-easy {
+            color: var(--success-color);
+        }
+        
+        .difficulty-medium {
+            color: var(--warning-color);
+        }
+        
+        .difficulty-hard {
+            color: var(--danger-color);
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: var(--primary-bg);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--primary-bg);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--accent-color);
+            color: var(--accent-light);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Admin Specific Styles */
+        .admin-panel {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .admin-section {
+            margin-bottom: 30px;
+        }
+        
+        .admin-section-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--accent-light);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        /* Student Specific Styles */
+        .enrolled-courses {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .course-card {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            border: 1px solid var(--accent-color);
+        }
+        
+        .course-progress {
+            height: 8px;
+            background-color: var(--primary-bg);
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 4px;
+        }
+        
+        /* Registration & Team Management Styles */
+        .registration-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .welcome-banner {
+            background: var(--gradient);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .welcome-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .team-card {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+        
+        .team-members {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .member-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .character-count {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .max-reached {
+            color: var(--danger-color);
+        }
+        
+        .multi-select {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            background-color: var(--secondary-bg);
+        }
+        
+        .multi-select-option {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .multi-select-option:hover {
+            background-color: rgba(138, 79, 255, 0.1);
+        }
+        
+        .multi-select-option.selected {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 16, 43, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+        
+        /* Question Simulation Styles */
+        .question-container {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .question-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+        
+        .question-points {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .question-content {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .answer-options {
+            margin-bottom: 15px;
+        }
+        
+        .answer-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .answer-option:hover {
+            background-color: rgba(138, 79, 255, 0.1);
+        }
+        
+        .answer-option.selected {
+            background-color: var(--accent-color);
+        }
+        
+        .answer-option input {
+            margin-right: 10px;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        
+        .question-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .question-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .question-status.correct {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .question-status.incorrect {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        
+        .question-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .question-feedback.correct {
+            background-color: rgba(111, 207, 151, 0.1);
+            border-left: 4px solid var(--success-color);
+            display: block;
+        }
+        
+        .question-feedback.incorrect {
+            background-color: rgba(235, 87, 87, 0.1);
+            border-left: 4px solid var(--danger-color);
+            display: block;
+        }
+        
+        .question-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .question-card {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .question-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+        
+        .question-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .question-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+        
+        .question-card-difficulty {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .question-card-difficulty.easy {
+            background-color: rgba(111, 207, 151, 0.2);
+            color: var(--success-color);
+        }
+        
+        .question-card-difficulty.medium {
+            background-color: rgba(242, 201, 76, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .question-card-difficulty.hard {
+            background-color: rgba(235, 87, 87, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .question-card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+        
+        /* Utility Classes */
+        .flex {
+            display: flex;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .align-center {
+            align-items: center;
+        }
+        
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        
+        .mt-20 {
+            margin-top: 20px;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .ml-10 {
+            margin-left: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--secondary-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 30px 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav li {
+                margin: 5px 10px;
+            }
+            
+            .user-info {
+                margin-top: 15px;
+            }
+            
+            .challenge-categories, .enrolled-courses, .team-grid, .question-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-navigation {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                min-width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .question-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab {
+                min-width: 100px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">C</div>
+                    CRDF Global
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-page="courses">Courses</a></li>
+                        <li><a href="#" class="nav-link" data-page="challenges">Challenges</a></li>
+                        <li><a href="#" class="nav-link" data-page="scoreboard">Scoreboard</a></li>
+                        <li><a href="#" class="nav-link" data-page="teams" id="teams-link">My Teams</a></li>
+                        <li><a href="#" class="nav-link" data-page="admin-panel" id="admin-link" style="display: none;">Admin Panel</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">RG</div>
+                    <span id="username">Rey Gengania</span>
+                    <div class="role-badge" id="role-badge">Student</div>
+                    <button class="btn btn-sm btn-primary ml-10" id="switch-role">Switch to Admin</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page-content active">
+                <h1 class="page-title" id="dashboard-title">Student Dashboard</h1>
+                
+                <!-- Student Dashboard -->
+                <div id="student-dashboard">
+                    <div class="welcome-banner">
+                        <h2>Welcome back, <span id="welcome-name">Rey Gengania</span>!</h2>
+                        <p>Organization: <span id="welcome-org">CRDF Global</span></p>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="create-team-btn">Create / Join Team</button>
+                        <button class="btn btn-primary" id="view-teams-btn">View My Teams</button>
+                    </div>
+                    
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-value">850</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Challenges Solved</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Rank</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Enrolled Courses</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Recent Question Progress</h2>
+                        <div class="question-list">
+                            <div class="question-card">
+                                <div class="question-card-header">
+                                    <div class="question-card-title">Java Attack Analysis</div>
+                                    <div class="question-card-difficulty medium">Medium</div>
+                                </div>
+                                <p>Analyze the Java Attack that occurred on 02 April 2012...</p>
+                                <div class="question-card-meta">
+                                    <span>15 pts</span>
+                                    <span>Completed</span>
+                                </div>
+                            </div>
+                            <div class="question-card">
+                                <div class="question-card-header">
+                                    <div class="question-card-title">Shellbags Analysis</div>
+                                    <div class="question-card-difficulty easy">Easy</div>
+                                </div>
+                                <p>Determine when a specific folder was opened...</p>
+                                <div class="question-card-meta">
+                                    <span>5 pts</span>
+                                    <span>In Progress</span>
+                                </div>
+                            </div>
+                            <div class="question-card">
+                                <div class="question-card-header">
+                                    <div class="question-card-title">Network Forensics</div>
+                                    <div class="question-card-difficulty hard">Hard</div>
+                                </div>
+                                <p>Identify the source of a network intrusion...</p>
+                                <div class="question-card-meta">
+                                    <span>25 pts</span>
+                                    <span>Not Started</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Dashboard -->
+                <div id="admin-dashboard" style="display: none;">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-value">1,250</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Active Courses</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Total Challenges</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">85%</div>
+                            <div class="stat-label">Platform Usage</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Question Management</h2>
+                        <div class="admin-panel">
+                            <div class="admin-section">
+                                <h3 class="admin-section-title">Question Statistics</h3>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Question</th>
+                                            <th>Difficulty</th>
+                                            <th>Points</th>
+                                            <th>Attempts</th>
+                                            <th>Success Rate</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Java Attack Analysis</td>
+                                            <td class="difficulty-medium">Medium</td>
+                                            <td>15</td>
+                                            <td>42</td>
+                                            <td>65%</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary">View</button>
+                                                <button class="btn btn-sm btn-warning">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shellbags Analysis</td>
+                                            <td class="difficulty-easy">Easy</td>
+                                            <td>5</td>
+                                            <td>78</td>
+                                            <td>92%</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary">View</button>
+                                                <button class="btn btn-sm btn-warning">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Network Forensics</td>
+                                            <td class="difficulty-hard">Hard</td>
+                                            <td>25</td>
+                                            <td>15</td>
+                                            <td>27%</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary">View</button>
+                                                <button class="btn btn-sm btn-warning">Edit</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button class="btn btn-primary mt-20">Add New Question</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Questions Page -->
+            <div id="questions" class="page-content" style="display: none;">
+                <h1 class="page-title" id="questions-title">Question Simulation</h1>
+                
+                <!-- Student Question View -->
+                <div id="student-questions">
+                    <div class="card">
+                        <h2 class="card-title">Cybersecurity Questions</h2>
+                        <p>Test your knowledge with these cybersecurity questions. Each question is worth points based on difficulty.</p>
+                    </div>
+                    
+                    <!-- Question 1 -->
+                    <div class="question-container" id="question-1">
+                        <div class="question-header">
+                            <div class="question-title">Question 12a - Java Attack Analysis</div>
+                            <div class="question-points">15 pts</div>
+                        </div>
+                        <div class="question-content">
+                            <p>Analyze the Java Attack that occurred on 02 April 2012 around 20:32:52 EDT. The user clicked on a link to http://bit.ly/GEUMQQ.</p>
+                            <p>Using only local data, determine the exact server that the system connected to and SHA1 the answer in ALL CAPS in the following format (SERVER/VERSION#).</p>
+                            <p><strong>Example Server:</strong> IIS/5.0 or APACHE/2.0.0</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Your Answer:</label>
+                            <input type="text" class="form-input answer-input" placeholder="Enter your answer in the format SERVER/VERSION#">
+                        </div>
+                        <div class="question-actions">
+                            <div class="question-status" id="question-1-status">Not submitted</div>
+                            <button class="btn btn-primary" onclick="submitAnswer(1)">Submit Answer</button>
+                        </div>
+                        <div class="question-feedback" id="question-1-feedback">
+                            <!-- Feedback will be displayed here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="question-container" id="question-2">
+                        <div class="question-header">
+                            <div class="question-title">Question 12b - Java Attack Analysis</div>
+                            <div class="question-points">10 pts</div>
+                        </div>
+                        <div class="question-content">
+                            <p>Analyze the Java Attack that occurred on 02 April 2012 around 20:32:52 EDT. The user clicked on a link to http://bit.ly/GEUMQQ.</p>
+                            <p>What date and time was the exploit "last modified" on the remote webserver?</p>
+                            <p>SHA1 the date format as YYYY-MM-DD hh:mm:ss UTC using a 24 hour clock 0-24. (Example: 2007-03-23 18:21:48)</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Your Answer:</label>
+                            <input type="text" class="form-input answer-input" placeholder="Enter your answer in the format YYYY-MM-DD hh:mm:ss">
+                        </div>
+                        <div class="question-actions">
+                            <div class="question-status" id="question-2-status">Not submitted</div>
+                            <button class="btn btn-primary" onclick="submitAnswer(2)">Submit Answer</button>
+                        </div>
+                        <div class="question-feedback" id="question-2-feedback">
+                            <!-- Feedback will be displayed here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div class="question-container" id="question-3">
+                        <div class="question-header">
+                            <div class="question-title">Question 13a - Shellbags Analysis</div>
+                            <div class="question-points">5 pts</div>
+                        </div>
+                        <div class="question-content">
+                            <p>According to Shellbags of Vibranium user, when was this folder opened: <code>C:\Documents and Settings\Idungan\My Documents\Backstopped Accounts - R&D Costs Alloy Research</code>?</p>
+                            <p>SHA1 the date format as YYYY-MM-DD hh:mm:ss UTC using a 24 hour clock 0-24. (Example: 2007-03-23 18:21:48)</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Your Answer:</label>
+                            <input type="text" class="form-input answer-input" placeholder="Enter your answer in the format YYYY-MM-DD hh:mm:ss">
+                        </div>
+                        <div class="question-actions">
+                            <div class="question-status" id="question-3-status">Not submitted</div>
+                            <button class="btn btn-primary" onclick="submitAnswer(3)">Submit Answer</button>
+                        </div>
+                        <div class="question-feedback" id="question-3-feedback">
+                            <!-- Feedback will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Question View -->
+                <div id="admin-questions" style="display: none;">
+                    <div class="card">
+                        <h2 class="card-title">Question Management</h2>
+                        <p>As an administrator, you can create, edit, and manage questions for the platform.</p>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="add-question-btn">Add New Question</button>
+                        <button class="btn" style="background: transparent; border: 1px solid var(--border-color);" id="view-stats-btn">View Question Statistics</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Existing Questions</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Difficulty</th>
+                                    <th>Points</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>12a</td>
+                                    <td>Java Attack Analysis</td>
+                                    <td class="difficulty-medium">Medium</td>
+                                    <td>15</td>
+                                    <td>Forensics</td>
+                                    <td><span style="color: var(--success-color)">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">Edit</button>
+                                        <button class="btn btn-sm btn-warning">Preview</button>
+                                        <button class="btn btn-sm btn-danger">Archive</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>12b</td>
+                                    <td>Java Attack Analysis - Part 2</td>
+                                    <td class="difficulty-medium">Medium</td>
+                                    <td>10</td>
+                                    <td>Forensics</td>
+                                    <td><span style="color: var(--success-color)">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">Edit</button>
+                                        <button class="btn btn-sm btn-warning">Preview</button>
+                                        <button class="btn btn-sm btn-danger">Archive</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>13a</td>
+                                    <td>Shellbags Analysis</td>
+                                    <td class="difficulty-easy">Easy</td>
+                                    <td>5</td>
+                                    <td>Forensics</td>
+                                    <td><span style="color: var(--success-color)">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">Edit</button>
+                                        <button class="btn btn-sm btn-warning">Preview</button>
+                                        <button class="btn btn-sm btn-danger">Archive</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Question Statistics</h2>
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-value">78%</div>
+                                <div class="stat-label">Average Success Rate</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">42</div>
+                                <div class="stat-label">Total Questions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">15</div>
+                                <div class="stat-label">Active Questions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">3.2</div>
+                                <div class="stat-label">Avg. Points per Question</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Teams Page -->
+            <div id="teams" class="page-content" style="display: none;">
+                <h1 class="page-title">My Teams</h1>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="create-new-team-btn">Create New Team</button>
+                    <button class="btn" style="background: transparent; border: 1px solid var(--border-color);" id="back-to-dashboard">Back to Dashboard</button>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">Teams Overview</h2>
+                    <div class="team-grid">
+                        <div class="team-card">
+                            <h3>Cyber Warriors</h3>
+                            <p>Team Size: 4 members</p>
+                            <div class="team-members">
+                                <div class="member-avatar">JD</div>
+                                <div class="member-avatar">AJ</div>
+                                <div class="member-avatar">BS</div>
+                                <div class="member-avatar">CD</div>
+                            </div>
+                            <button class="btn btn-sm btn-primary mt-20">Manage Team</button>
+                        </div>
+                        
+                       
+                            <button class="btn btn-sm btn-primary mt-20">Manage Team</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Courses Page -->
+            <div id="courses" class="page-content" style="display: none;">
+                <h1 class="page-title" id="courses-title">Available Courses</h1>
+                
+                <!-- Student Course View -->
+                <div id="student-courses">
+                    <div class="card">
+                        <p>Browse and enroll in available cybersecurity courses.</p>
+                    </div>
+                    
+                    <div class="challenge-categories">
+                        <div class="category-card">
+                            <div class="category-icon">📚</div>
+                            <h3>Introduction to Cybersecurity</h3>
+                            <p>Learn the fundamentals of cybersecurity, including threats, vulnerabilities, and basic defense mechanisms.</p>
+                            <div class="flex justify-between mt-20">
+                                <span>12 Modules</span>
+                                <button class="btn btn-primary">Enroll</button>
+                            </div>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-icon">🌐</div>
+                            <h3>Web Application Security</h3>
+                            <p>Understanding and exploiting web vulnerabilities like SQL injection, XSS, and CSRF.</p>
+                            <div class="flex justify-between mt-20">
+                                <span>8 Modules</span>
+                                <button class="btn btn-primary">Enroll</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+           <!-- Challenges Page Container -->
+<div id="challenges" class="page-content">
+    <h1 class="page-title" id="challenges-title">Challenges</h1>
+    
+    <!-- Student Challenges View -->
+    <div id="student-challenges">
+        <div class="challenges-header">
+            <div class="search-filter">
+                <input type="text" class="form-input search-input" placeholder="Search challenges...">
+                <select class="form-select filter-select">
+                    <option value="all">All Categories</option>
+                    <option value="web">Web Exploitation</option>
+                    <option value="crypto">Cryptography</option>
+                    <option value="forensics">Forensics</option>
+                    <option value="binary">Binary Exploitation</option>
+                    <option value="cloud">Cloud Security</option>
+                </select>
+            </div>
+            <div class="challenges-stats">
+                <span class="stat">Solved: <strong>12/45</strong></span>
+                <span class="stat">Points: <strong>850</strong></span>
+                <span class="stat">Rank: <strong>5th</strong></span>
+            </div>
+        </div>
+
+        <div class="tab-navigation">
+            <div class="tab active" data-tab="all">All Challenges</div>
+            <div class="tab" data-tab="solved">Solved</div>
+            <div class="tab" data-tab="unsolved">Unsolved</div>
+            <div class="tab" data-tab="in-progress">In Progress</div>
+        </div>
+
+        <div class="tab-content active" id="all-tab">
+            <div class="challenges-grid">
+                <!-- Challenge Card 1 -->
+                <div class="challenge-card solved">
+                    <div class="challenge-header">
+                        <div class="challenge-category web">Web</div>
+                        <div class="challenge-status solved">✓ Solved</div>
+                    </div>
+                    <h3 class="challenge-title">SQL Injection Master</h3>
+                    <p class="challenge-description">Exploit SQL injection vulnerabilities to extract sensitive data from the database.</p>
+                    <div class="challenge-meta">
+                        <span class="points">100 pts</span>
+                        <span class="difficulty difficulty-medium">Medium</span>
+                        <span class="solves">42 solves</span>
+                    </div>
+                    <div class="challenge-actions">
+                        <button class="btn btn-primary btn-view">View Challenge</button>
+                        <button class="btn btn-hint" data-points="10">Get Hint (-10pts)</button>
+                    </div>
+                </div>
+
+                <!-- Challenge Card 2 -->
+                <div class="challenge-card in-progress">
+                    <div class="challenge-header">
+                        <div class="challenge-category crypto">Crypto</div>
+                        <div class="challenge-status in-progress">In Progress</div>
+                    </div>
+                    <h3 class="challenge-title">RSA Challenge</h3>
+                    <p class="challenge-description">Break RSA encryption with weak key generation parameters.</p>
+                    <div class="challenge-meta">
+                        <span class="points">150 pts</span>
+                        <span class="difficulty difficulty-hard">Hard</span>
+                        <span class="solves">18 solves</span>
+                    </div>
+                    <div class="challenge-progress">
+                        <div class="progress-text">2 hours spent</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    <div class="challenge-actions">
+                        <button class="btn btn-primary btn-continue">Continue</button>
+                        <button class="btn btn-hint" data-points="15">Get Hint (-15pts)</button>
+                    </div>
+                </div>
+
+                <!-- Challenge Card 3 -->
+                <div class="challenge-card unsolved">
+                    <div class="challenge-header">
+                        <div class="challenge-category forensics">Forensics</div>
+                        <div class="challenge-status unsolved">Unsolved</div>
+                    </div>
+                    <h3 class="challenge-title">Memory Dump Analysis</h3>
+                    <p class="challenge-description">Analyze a memory dump to find hidden credentials and sensitive data.</p>
+                    <div class="challenge-meta">
+                        <span class="points">200 pts</span>
+                        <span class="difficulty difficulty-hard">Hard</span>
+                        <span class="solves">8 solves</span>
+                    </div>
+                    <div class="challenge-actions">
+                        <button class="btn btn-primary btn-start">Start Challenge</button>
+                        <button class="btn btn-hint" data-points="20">Get Hint (-20pts)</button>
+                    </div>
+                </div>
+
+                <!-- Challenge Card 4 -->
+                <div class="challenge-card unsolved">
+                    <div class="challenge-header">
+                        <div class="challenge-category cloud">Cloud</div>
+                        <div class="challenge-status unsolved">Unsolved</div>
+                    </div>
+                    <h3 class="challenge-title">AWS IAM Misconfiguration</h3>
+                    <p class="challenge-description">Exploit misconfigured IAM policies to gain elevated privileges.</p>
+                    <div class="challenge-meta">
+                        <span class="points">120 pts</span>
+                        <span class="difficulty difficulty-medium">Medium</span>
+                        <span class="solves">25 solves</span>
+                    </div>
+                    <div class="vm-indicator">
+                        <span class="vm-badge">VM Available</span>
+                        <span class="vm-status">Ready to deploy</span>
+                    </div>
+                    <div class="challenge-actions">
+                        <button class="btn btn-primary btn-start">Start Challenge</button>
+                        <button class="btn btn-vm">Launch VM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge Detail Modal -->
+        <div class="modal" id="challenge-modal">
+            <div class="modal-content challenge-modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-challenge-title">SQL Injection Master</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="challenge-detail">
+                    <div class="challenge-info">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Category:</label>
+                                <span class="challenge-category web">Web Exploitation</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Points:</label>
+                                <span class="points-value">100</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Difficulty:</label>
+                                <span class="difficulty difficulty-medium">Medium</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Solves:</label>
+                                <span class="solves-value">42</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="challenge-description-full">
+                        <h4>Description</h4>
+                        <p>This challenge presents a vulnerable web application with SQL injection vulnerabilities. Your task is to exploit these vulnerabilities to extract the flag from the database.</p>
+                        
+                        <h4>Resources</h4>
+                        <div class="resource-links">
+                            <a href="#" class="resource-link">Vulnerable Application</a>
+                            <a href="#" class="resource-link">Source Code</a>
+                            <a href="#" class="resource-link">Hint Forum</a>
+                        </div>
+                    </div>
+
+                    <div class="flag-submission">
+                        <h4>Submit Flag</h4>
+                        <div class="submission-form">
+                            <input type="text" class="form-input flag-input" placeholder="Enter flag format: CRDF{...}">
+                            <button class="btn btn-primary btn-submit">Submit Flag</button>
+                        </div>
+                        <div class="submission-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Challenges View -->
+    <div id="admin-challenges" style="display: none;">
+        <div class="admin-section-header">
+            <h2>Challenge Management</h2>
+            <div class="admin-actions">
+                <button class="btn btn-primary" id="create-challenge-btn">+ Create Challenge</button>
+                <button class="btn" style="background: transparent; border: 1px solid var(--border-color);" id="import-challenges">Import from Library</button>
+                <button class="btn btn-danger" id="bulk-archive">Archive Selected</button>
+            </div>
+        </div>
+
+        <div class="admin-tabs">
+            <div class="tab-navigation">
+                <div class="tab active" data-tab="manage">Manage Challenges</div>
+                <div class="tab" data-tab="statistics">Statistics</div>
+                <div class="tab" data-tab="settings">Event Settings</div>
+            </div>
+
+            <!-- Manage Challenges Tab -->
+            <div class="tab-content active" id="manage-tab">
+                <div class="challenges-table-container">
+                    <table class="data-table admin-challenges-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all"></th>
+                                <th>Challenge Name</th>
+                                <th>Category</th>
+                                <th>Points</th>
+                                <th>Difficulty</th>
+                                <th>Status</th>
+                                <th>Solves</th>
+                                <th>Success Rate</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="challenge-checkbox"></td>
+                                <td>SQL Injection Master</td>
+                                <td><span class="challenge-category web">Web</span></td>
+                                <td>100</td>
+                                <td><span class="difficulty difficulty-medium">Medium</span></td>
+                                <td><span class="status-active">Active</span></td>
+                                <td>42</td>
+                                <td>65%</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm" style="background: transparent; border: 1px solid var(--border-color);">Test</button>
+                                    <button class="btn btn-sm btn-warning">Archive</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="challenge-checkbox"></td>
+                                <td>RSA Challenge</td>
+                                <td><span class="challenge-category crypto">Crypto</span></td>
+                                <td>150</td>
+                                <td><span class="difficulty difficulty-hard">Hard</span></td>
+                                <td><span class="status-active">Active</span></td>
+                                <td>18</td>
+                                <td>32%</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm" style="background: transparent; border: 1px solid var(--border-color);">Test</button>
+                                    <button class="btn btn-sm btn-warning">Archive</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="challenge-checkbox"></td>
+                                <td>Memory Dump Analysis</td>
+                                <td><span class="challenge-category forensics">Forensics</span></td>
+                                <td>200</td>
+                                <td><span class="difficulty difficulty-hard">Hard</span></td>
+                                <td><span class="status-draft">Draft</span></td>
+                                <td>8</td>
+                                <td>18%</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm" style="background: transparent; border: 1px solid var(--border-color);">Test</button>
+                                    <button class="btn btn-sm btn-success">Publish</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div class="tab-content" id="statistics-tab">
+                <div class="stats-overview">
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <div class="stat-value">45</div>
+                            <div class="stat-label">Total Challenges</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">1,248</div>
+                            <div class="stat-label">Total Submissions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">58%</div>
+                            <div class="stat-label">Avg. Success Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">Active Challenges</div>
+                        </div>
+                    </div>
+
+                    <div class="charts-container">
+                        <div class="chart-card">
+                            <h4>Challenge Completion Rates</h4>
+                            <div class="chart-bars">
+                                <div class="chart-bar">
+                                    <span>SQL Injection</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill" style="width: 65%"></div>
+                                    </div>
+                                    <span>65%</span>
+                                </div>
+                                <div class="chart-bar">
+                                    <span>RSA Challenge</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill" style="width: 32%"></div>
+                                    </div>
+                                    <span>32%</span>
+                                </div>
+                                <div class="chart-bar">
+                                    <span>Memory Analysis</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill" style="width: 18%"></div>
+                                    </div>
+                                    <span>18%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Settings Tab -->
+            <div class="tab-content" id="settings-tab">
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label class="form-label">Event Name</label>
+                        <input type="text" class="form-input" value="CRDF Global CTF 2024">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Start Time</label>
+                            <input type="datetime-local" class="form-input" value="2024-03-15T09:00">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Time</label>
+                            <input type="datetime-local" class="form-input" value="2024-03-17T18:00">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Access Control</label>
+                        <select class="form-select">
+                            <option>Public Registration</option>
+                            <option>Private (Invite Only)</option>
+                            <option>University Restricted</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Scoreboard Visibility</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Show live scoreboard
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox"> Hide specific teams (admins only)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary">Save Settings</button>
+                        <button class="btn" style="background: transparent; border: 1px solid var(--border-color);">Reset to Defaults</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Challenge Modal -->
+        <div class="modal" id="create-challenge-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Create New Challenge</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="challenge-creation-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Challenge Name</label>
+                            <input type="text" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="web">Web Exploitation</option>
+                                <option value="crypto">Cryptography</option>
+                                <option value="forensics">Forensics</option>
+                                <option value="binary">Binary Exploitation</option>
+                                <option value="cloud">Cloud Security</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Points Value</label>
+                            <input type="number" class="form-input" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Difficulty</label>
+                            <select class="form-select" required>
+                                <option value="">Select Difficulty</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Flag Format</label>
+                        <input type="text" class="form-input" placeholder="CRDF{...}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Challenge Files</label>
+                        <input type="file" class="form-input" multiple>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">VM Environment (Cloud)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox"> Deploy virtual machine
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn" id="cancel-challenge">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Challenge</button>
+                        <button type="button" class="btn" style="background: transparent; border: 1px solid var(--border-color);">Save as Draft</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Challenges Specific Styles */
+.challenges-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-filter {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-input {
+    width: 300px;
+}
+
+.filter-select {
+    width: 200px;
+}
+
+.challenges-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.challenges-stats .stat {
+    color: var(--text-secondary);
+}
+
+.challenges-stats .stat strong {
+    color: var(--accent-light);
+}
+
+.challenges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.challenge-card {
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.challenge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: var(--accent-color);
+}
+
+.challenge-card.solved {
+    border-left: 4px solid var(--success-color);
+}
+
+.challenge-card.in-progress {
+    border-left: 4px solid var(--warning-color);
+}
+
+.challenge-card.unsolved {
+    border-left: 4px solid var(--border-color);
+}
+
+.challenge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.challenge-category {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.challenge-category.web {
+    background: rgba(138, 79, 255, 0.2);
+    color: var(--accent-light);
+}
+
+.challenge-category.crypto {
+    background: rgba(242, 201, 76, 0.2);
+    color: var(--warning-color);
+}
+
+.challenge-category.forensics {
+    background: rgba(111, 207, 151, 0.2);
+    color: var(--success-color);
+}
+
+.challenge-category.cloud {
+    background: rgba(66, 133, 244, 0.2);
+    color: #4285f4;
+}
+
+.challenge-category.binary {
+    background: rgba(235, 87, 87, 0.2);
+    color: var(--danger-color);
+}
+
+.challenge-status {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.challenge-status.solved {
+    background: var(--success-color);
+    color: white;
+}
+
+.challenge-status.in-progress {
+    background: var(--warning-color);
+    color: var(--primary-bg);
+}
+
+.challenge-status.unsolved {
+    background: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.challenge-title {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.challenge-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+.challenge-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.points {
+    color: var(--accent-light);
+    font-weight: bold;
+}
+
+.solves {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.challenge-progress {
+    margin-bottom: 15px;
+}
+
+.progress-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    height: 6px;
+    background: var(--primary-bg);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gradient);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.vm-indicator {
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.3);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vm-badge {
+    background: #4285f4;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.vm-status {
+    color: #4285f4;
+    font-size: 12px;
+}
+
+.challenge-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-hint {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-hint:hover {
+    background: rgba(242, 201, 76, 0.1);
+    border-color: var(--warning-color);
+    color: var(--warning-color);
+}
+
+.btn-vm {
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid #4285f4;
+    color: #4285f4;
+}
+
+.btn-vm:hover {
+    background: #4285f4;
+    color: white;
+}
+
+/* Challenge Detail Modal */
+.challenge-modal-content {
+    max-width: 800px;
+}
+
+.challenge-detail {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-item label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.challenge-description-full h4 {
+    color: var(--accent-light);
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.challenge-description-full p {
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.resource-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.resource-link {
+    color: var(--accent-light);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--accent-color);
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.resource-link:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.flag-submission {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.submission-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.flag-input {
+    flex: 1;
+}
+
+.submission-feedback {
+    min-height: 40px;
+    padding: 10px;
+    border-radius: 6px;
+    display: none;
+}
+
+.submission-feedback.correct {
+    background: rgba(111, 207, 151, 0.1);
+    border: 1px solid var(--success-color);
+    color: var(--success-color);
+    display: block;
+}
+
+.submission-feedback.incorrect {
+    background: rgba(235, 87, 87, 0.1);
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+    display: block;
+}
+
+/* Admin Challenges Styles */
+.admin-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.admin-challenges-table th:first-child,
+.admin-challenges-table td:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+.status-active {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.status-draft {
+    color: var(--warning-color);
+    font-weight: bold;
+}
+
+.stats-overview {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.chart-card {
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.chart-card h4 {
+    color: var(--accent-light);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.chart-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chart-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chart-bar span:first-child {
+    width: 150px;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.bar-container {
+    flex: 1;
+    height: 20px;
+    background: var(--primary-bg);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: var(--gradient);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.chart-bar span:last-child {
+    width: 40px;
+    text-align: right;
+    color: var(--accent-light);
+    font-weight: 600;
+}
+
+.settings-form {
+    max-width: 600px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .challenges-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter {
+        flex-direction: column;
+    }
+    
+    .search-input, .filter-select {
+        width: 100%;
+    }
+    
+    .challenges-stats {
+        justify-content: space-around;
+    }
+    
+    .challenges-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .challenge-actions {
+        flex-direction: column;
+    }
+    
+    .submission-form {
+        flex-direction: column;
+    }
+    
+    .admin-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .admin-actions .btn {
+        width: 100%;
+    }
+    
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .chart-bar span:first-child {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// Challenges functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab navigation for challenges
+    const challengeTabs = document.querySelectorAll('#student-challenges .tab');
+    challengeTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update active tab
+            challengeTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding tab content
+            document.querySelectorAll('#student-challenges .tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId + '-tab').classList.add('active');
+        });
+    });
+    
+    // Challenge modal functionality
+    const challengeButtons = document.querySelectorAll('.btn-view, .btn-start, .btn-continue');
+    const challengeModal = document.getElementById('challenge-modal');
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+    
+    challengeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // In a real app, this would load challenge-specific data
+            challengeModal.style.display = 'flex';
+        });
+    });
+    
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            challengeModal.style.display = 'none';
+        });
+    });
+    
+    // Flag submission
+    const submitButton = document.querySelector('.btn-submit');
+    if (submitButton) {
+        submitButton.addEventListener('click', function() {
+            const flagInput = document.querySelector('.flag-input');
+            const feedback = document.querySelector('.submission-feedback');
+            
+            if (!flagInput.value) {
+                alert('Please enter a flag');
+                return;
+            }
+            
+            // Simulate flag validation
+            const isCorrect = Math.random() > 0.5; // Random for demo
+            
+            if (isCorrect) {
+                feedback.textContent = '✓ Correct! Challenge completed.';
+                feedback.className = 'submission-feedback correct';
+            } else {
+                feedback.textContent = '✗ Incorrect flag. Please try again.';
+                feedback.className = 'submission-feedback incorrect';
+            }
+        });
+    }
+    
+    // Hint system
+    const hintButtons = document.querySelectorAll('.btn-hint');
+    hintButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const points = this.getAttribute('data-points');
+            if (confirm(`This hint will cost ${points} points. Continue?`)) {
+                alert('Hint: Check the source code for hidden comments');
+            }
+        });
+    });
+    
+    // Admin challenge creation
+    const createChallengeBtn = document.getElementById('create-challenge-btn');
+    const createChallengeModal = document.getElementById('create-challenge-modal');
+    
+    if (createChallengeBtn) {
+        createChallengeBtn.addEventListener('click', function() {
+            createChallengeModal.style.display = 'flex';
+        });
+    }
+    
+    // Close create challenge modal
+    document.getElementById('cancel-challenge')?.addEventListener('click', function() {
+        createChallengeModal.style.display = 'none';
+    });
+    
+    // Select all functionality for admin
+    const selectAll = document.getElementById('select-all');
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.challenge-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
+});
+</script>
+            
+           
+<div class="scoreboard-container">
+    <div class="scoreboard-header">
+        <h2>Live Scoreboard</h2>
+        <button id="toggle-scoreboard" class="btn-toggle">Hide Scoreboard</button>
+    </div>
+    
+    <div class="scoreboard-content" id="scoreboard-content">
+        <div class="scoreboard-row first-place">
+            <div class="rank">1st</div>
+            <div class="team-name">QuantumPoptarts</div>
+            <div class="team-score">6,242pts</div>
+            <div class="team-movement up">↑</div>
+        </div>
+        
+        <div class="scoreboard-row second-place">
+            <div class="rank">2nd</div>
+            <div class="team-name">WEH</div>
+            <div class="team-score">5,995pts</div>
+            <div class="team-movement down">↓</div>
+        </div>
+        
+        <div class="scoreboard-row third-place">
+            <div class="rank">3rd</div>
+            <div class="team-name">TeamName-of-MyChoice</div>
+            <div class="team-score">5,258pts</div>
+            <div class="team-movement stable">→</div>
+        </div>
+        
+        <div class="scoreboard-row">
+            <div class="rank">4th</div>
+            <div class="team-name">The Undecideds</div>
+            <div class="team-score">3,489pts</div>
+            <div class="team-movement up">↑</div>
+        </div>
+        
+        <div class="scoreboard-row">
+            <div class="rank">5th</div>
+            <div class="team-name">Geren</div>
+            <div class="team-score">3,125pts</div>
+            <div class="team-movement down">↓</div>
+        </div>
+        
+        <div class="scoreboard-row">
+            <div class="rank">6th</div>
+            <div class="team-name">Goreme</div>
+            <div class="team-score">2,845pts</div>
+            <div class="team-movement up">↑</div>
+        </div>
+    </div>
+</div>
+
+<style>
+.scoreboard-container {
+    background: linear-gradient(135deg, #2d1b4e 0%, #35215a 100%);
+    border-radius: 12px;
+    border: 1px solid #4a2d7a;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.scoreboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #4a2d7a;
+    padding-bottom: 15px;
+}
+
+.scoreboard-header h2 {
+    color: #f0e6ff;
+    font-size: 24px;
+    margin: 0;
+    background: linear-gradient(135deg, #8a4fff 0%, #a67cff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.btn-toggle {
+    background: #8a4fff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-toggle:hover {
+    background: #6b30e6;
+    transform: translateY(-2px);
+}
+
+.scoreboard-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.scoreboard-row:hover {
+    background: rgba(138, 79, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.first-place {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.05) 100%);
+    border-left: 4px solid #FFD700;
+}
+
+.second-place {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.15) 0%, rgba(192, 192, 192, 0.05) 100%);
+    border-left: 4px solid #C0C0C0;
+}
+
+.third-place {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.15) 0%, rgba(205, 127, 50, 0.05) 100%);
+    border-left: 4px solid #CD7F32;
+}
+
+.rank {
+    font-weight: bold;
+    width: 50px;
+    color: #f0e6ff;
+    font-size: 16px;
+}
+
+.team-name {
+    flex: 1;
+    color: #f0e6ff;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.team-score {
+    font-weight: bold;
+    color: #8a4fff;
+    width: 100px;
+    text-align: right;
+    font-size: 16px;
+}
+
+.team-movement {
+    width: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.team-movement.up {
+    color: #6fcf97;
+}
+
+.team-movement.down {
+    color: #eb5757;
+}
+
+.team-movement.stable {
+    color: #f2c94c;
+}
+
+.scoreboard-hidden #scoreboard-content {
+    display: none;
+}
+
+.scoreboard-hidden .btn-toggle {
+    background: #6fcf97;
+}
+
+/* Live update animation */
+@keyframes highlightUpdate {
+    0% { background-color: rgba(138, 79, 255, 0.3); }
+    100% { background-color: transparent; }
+}
+
+.score-update {
+    animation: highlightUpdate 2s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .scoreboard-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .scoreboard-row {
+        padding: 10px;
+    }
+    
+    .team-name {
+        font-size: 14px;
+    }
+    
+    .rank, .team-score {
+        font-size: 14px;
+    }
+}
+</style>
+
+<script>
+// Toggle scoreboard visibility
+document.getElementById('toggle-scoreboard').addEventListener('click', function() {
+    const scoreboard = document.querySelector('.scoreboard-container');
+    const button = this;
+    
+    scoreboard.classList.toggle('scoreboard-hidden');
+    
+    if (scoreboard.classList.contains('scoreboard-hidden')) {
+        button.textContent = 'Show Scoreboard';
+    } else {
+        button.textContent = 'Hide Scoreboard';
+    }
+});
+
+// Simulate live score updates (for demo purposes)
+function simulateLiveUpdate() {
+    const rows = document.querySelectorAll('.scoreboard-row');
+    if (rows.length > 1) {
+        // Randomly select a row to update
+        const randomRow = rows[Math.floor(Math.random() * rows.length)];
+        
+        // Add update animation
+        randomRow.classList.add('score-update');
+        
+        // Remove animation class after it completes
+        setTimeout(() => {
+            randomRow.classList.remove('score-update');
+        }, 2000);
+        
+        // Randomly change movement indicator
+        const movement = randomRow.querySelector('.team-movement');
+        const movements = ['up', 'down', 'stable'];
+        const randomMovement = movements[Math.floor(Math.random() * movements.length)];
+        
+        movement.className = 'team-movement ' + randomMovement;
+        movement.textContent = randomMovement === 'up' ? '↑' : 
+                              randomMovement === 'down' ? '↓' : '→';
+    }
+}
+
+// Update scores every 10 seconds (demo)
+setInterval(simulateLiveUpdate, 10000);
+
+// Initial highlight for first place
+document.querySelector('.first-place').classList.add('score-update');
+setTimeout(() => {
+    document.querySelector('.first-place').classList.remove('score-update');
+}, 2000);
+</script>
+            
+            <!-- Admin Panel Page -->
+            <div id="admin-panel" class="page-content" style="display: none;">
+                <h1 class="page-title">Admin Panel</h1>
+                
+                <div class="admin-panel">
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">User Management</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Last Active</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>rey_gengania</td>
+                                    <td>rey_genganiae@example.com</td>
+                                    <td>Student</td>
+                                    <td><span style="color: var(--success-color)">Active</span></td>
+                                    <td>2023-10-20</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">View</button>
+                                        <button class="btn btn-sm btn-warning">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Suspend</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>alice_j</td>
+                                    <td>alice.j@example.com</td>
+                                    <td>Student</td>
+                                    <td><span style="color: var(--success-color)">Active</span></td>
+                                    <td>2023-10-19</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">View</button>
+                                        <button class="btn btn-sm btn-warning">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Suspend</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>prof_smith</td>
+                                    <td>smith@university.edu</td>
+                                    <td>Instructor</td>
+                                    <td><span style="color: var(--success-color)">Active</span></td>
+                                    <td>2023-10-18</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">View</button>
+                                        <button class="btn btn-sm btn-warning">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Suspend</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-primary mt-20">Add New User</button>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">System Configuration</h3>
+                        <div class="card">
+                            <div class="form-group">
+                                <label class="form-label">Platform Name</label>
+                                <input type="text" class="form-input" value="CRDF Global">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Registration Policy</label>
+                                <select class="form-select">
+                                    <option>Open Registration</option>
+                                    <option>Invite Only</option>
+                                    <option>Admin Approval Required</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Default User Role</label>
+                                <select class="form-select">
+                                    <option>Student</option>
+                                    <option>Instructor</option>
+                                    <option>Read Only</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary">Save Settings</button>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">Analytics & Reporting</h3>
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-value">78%</div>
+                                <div class="stat-label">Course Completion Rate</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">42</div>
+                                <div class="stat-label">Avg. Challenges per Student</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">3.2</div>
+                                <div class="stat-label">Avg. Course Rating</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">92%</div>
+                                <div class="stat-label">User Satisfaction</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary">Generate Detailed Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Question Modal -->
+    <div class="modal" id="question-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Question</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Question Title</label>
+                <input type="text" class="form-input" placeholder="Enter question title">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Question Content</label>
+                <textarea class="form-textarea" placeholder="Enter question content" rows="5"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Difficulty</label>
+                    <select class="form-select">
+                        <option>Easy</option>
+                        <option>Medium</option>
+                        <option>Hard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Points</label>
+                    <input type="number" class="form-input" value="10">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select class="form-select">
+                    <option>Forensics</option>
+                    <option>Web Security</option>
+                    <option>Cryptography</option>
+                    <option>Network Security</option>
+                    <option>Binary Exploitation</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Answer Format</label>
+                <input type="text" class="form-input" placeholder="e.g., SERVER/VERSION# or YYYY-MM-DD hh:mm:ss">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Correct Answer</label>
+                <input type="text" class="form-input" placeholder="Enter the correct answer">
+            </div>
+            <button class="btn btn-primary">Create Question</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-icon" style="width: 30px; height: 30px; font-size: 16px; margin-right: 10px;">C</div>
+                    CRDF Global
+                </div>
+                <p>Cybersecurity Training Platform &copy; 2023 | Empowering the next generation of cybersecurity professionals</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Current user role (toggle between student and admin)
+        let isAdmin = false;
+        
+        // DOM Elements
+        const switchRoleBtn = document.getElementById('switch-role');
+        const roleBadge = document.getElementById('role-badge');
+        const adminLink = document.getElementById('admin-link');
+        const username = document.getElementById('username');
+        const userAvatar = document.getElementById('user-avatar');
+        
+        const studentDashboard = document.getElementById('student-dashboard');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const studentQuestions = document.getElementById('student-questions');
+        const adminQuestions = document.getElementById('admin-questions');
+        const studentCourses = document.getElementById('student-courses');
+        const adminCourses = document.getElementById('admin-courses');
+        
+        const dashboardTitle = document.getElementById('dashboard-title');
+        const questionsTitle = document.getElementById('questions-title');
+        const coursesTitle = document.getElementById('courses-title');
+        
+        const addQuestionBtn = document.getElementById('add-question-btn');
+        const questionModal = document.getElementById('question-modal');
+        const closeModal = document.querySelector('.close-modal');
+        
+        // Sample answers for the questions
+        const correctAnswers = {
+            1: "APACHE/2.2.3",
+            2: "2012-04-02 20:32:52",
+            3: "2012-03-15 14:22:10"
+        };
+        
+        
+        
+        // Page navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('data-page');
+                
+                // Hide all pages
+                document.querySelectorAll('.page-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                
+                // Show selected page
+                document.getElementById(page).style.display = 'block';
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Tab navigation
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show corresponding tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId + '-tab').classList.add('active');
+            });
+        });
+        
+        // Modal controls
+        if (addQuestionBtn) {
+            addQuestionBtn.addEventListener('click', function() {
+                questionModal.style.display = 'flex';
+            });
+        }
+        
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                questionModal.style.display = 'none';
+            });
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === questionModal) {
+                questionModal.style.display = 'none';
+            }
+        });
+        
+        // Question submission function
+        function submitAnswer(questionId) {
+            const answerInput = document.querySelector(`#question-${questionId} .answer-input`);
+            const statusElement = document.getElementById(`question-${questionId}-status`);
+            const feedbackElement = document.getElementById(`question-${questionId}-feedback`);
+            const submitButton = document.querySelector(`#question-${questionId} .btn-primary`);
+            
+            const userAnswer = answerInput.value.trim();
+            const correctAnswer = correctAnswers[questionId];
+            
+            if (!userAnswer) {
+                alert('Please enter an answer before submitting.');
+                return;
+            }
+            
+            // Simple answer validation (in a real app, this would be more sophisticated)
+            const isCorrect = userAnswer.toUpperCase() === correctAnswer.toUpperCase();
+            
+            if (isCorrect) {
+                statusElement.textContent = 'Correct!';
+                statusElement.className = 'question-status correct';
+                feedbackElement.textContent = `Great job! You've earned ${getQuestionPoints(questionId)} points.`;
+                feedbackElement.className = 'question-feedback correct';
+                submitButton.textContent = 'Completed';
+                submitButton.disabled = true;
+                submitButton.style.backgroundColor = 'var(--success-color)';
+            } else {
+                statusElement.textContent = 'Incorrect';
+                statusElement.className = 'question-status incorrect';
+                feedbackElement.textContent = 'That answer is incorrect. Please review the question and try again.';
+                feedbackElement.className = 'question-feedback incorrect';
+            }
+        }
+        
+        // Helper function to get points for a question
+        function getQuestionPoints(questionId) {
+            const pointsElements = document.querySelectorAll('.question-points');
+            for (let element of pointsElements) {
+                if (element.closest(`#question-${questionId}`)) {
+                    return element.textContent.replace(' pts', '');
+                }
+            }
+            return 0;
+        }
+        
+        // Challenge view buttons
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            if (button.textContent === 'View') {
+                button.addEventListener('click', function() {
+                    alert('Challenge detail view would open here. In a real application, this would show the challenge interface.');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

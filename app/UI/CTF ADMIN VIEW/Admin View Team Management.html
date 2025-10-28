@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRDF Global - Admin Team Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a102b;
+            --secondary-bg: #2d1b4e;
+            --accent-color: #8a4fff;
+            --accent-light: #a67cff;
+            --accent-dark: #6b30e6;
+            --text-primary: #f0e6ff;
+            --text-secondary: #c2b0e6;
+            --border-color: #4a2d7a;
+            --card-bg: #35215a;
+            --success-color: #6fcf97;
+            --warning-color: #f2c94c;
+            --danger-color: #eb5757;
+            --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+            --admin-color: #ff6b6b;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .admin-badge {
+            background: var(--admin-color);
+            color: white;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 12px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d93636;
+            transform: translateY(-2px);
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--accent-light);
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: rgba(111, 207, 151, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background: rgba(235, 87, 87, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .status-pending {
+            background: rgba(242, 201, 76, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.3s;
+            padding: 5px;
+        }
+        
+        .action-btn:hover {
+            color: var(--accent-light);
+        }
+        
+        .action-btn.delete:hover {
+            color: var(--danger-color);
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        
+        .search-input {
+            padding-left: 45px;
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .team-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .team-details {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .team-members-list {
+            margin-top: 20px;
+        }
+        
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .member-details {
+            flex: 1;
+        }
+        
+        .member-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .member-email {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .member-role {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(138, 79, 255, 0.2);
+            color: var(--accent-light);
+        }
+        
+        .member-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .join-requests {
+            margin-top: 20px;
+        }
+        
+        .request-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .request-info {
+            flex: 1;
+        }
+        
+        .request-user {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .request-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 16, 43, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .success-message {
+            background: rgba(111, 207, 151, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background: rgba(235, 87, 87, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                CRDF Global <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div style="flex: 1;">
+                <h1 class="page-title">Team Management</h1>
+                <p class="page-subtitle">Admin controls for managing teams, users, and permissions</p>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary">
+                    <span>📥</span>
+                    Export Data
+                </button>
+                <button class="btn btn-primary" id="create-team-btn">
+                    <span>➕</span>
+                    Create Team
+                </button>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div class="success-message" id="success-message">
+            ✓ Operation completed successfully!
+        </div>
+        
+        <div class="error-message" id="error-message">
+            ✗ There was an error processing your request.
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Total Teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">187</div>
+                <div class="stat-label">Registered Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">23</div>
+                <div class="stat-label">Pending Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">78%</div>
+                <div class="stat-label">Active Participation</div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <div class="tab active" data-tab="teams">All Teams</div>
+            <div class="tab" data-tab="users">User Management</div>
+            <div class="tab" data-tab="requests">Join Requests</div>
+            <div class="tab" data-tab="settings">Team Settings</div>
+        </div>
+
+        <!-- All Teams Tab -->
+        <div id="teams" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">👥</span>
+                    All Teams
+                </h2>
+                
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="team-search" placeholder="Search teams by name, description, or captain...">
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>Captain</th>
+                                <th>Members</th>
+                                <th>Points</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>QuantumPoptarts</td>
+                                <td>John Doe</td>
+                                <td>4/6</td>
+                                <td>1,250</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Mar 15, 2023</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Details">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>WEH</td>
+                                <td>Sarah Connor</td>
+                                <td>5/5</td>
+                                <td>1,180</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Feb 28, 2023</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Details">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Code Breakers</td>
+                                <td>Mike Smith</td>
+                                <td>2/4</td>
+                                <td>650</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Apr 5, 2023</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Details">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cyber Warriors</td>
+                                <td>Lisa Jones</td>
+                                <td>3/4</td>
+                                <td>420</td>
+                                <td><span class="status-badge status-inactive">Inactive</span></td>
+                                <td>Jan 10, 2023</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Details">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Binary Ninjas</td>
+                                <td>Alex Johnson</td>
+                                <td>1/4</td>
+                                <td>0</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>May 1, 2023</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Details">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Tab -->
+        <div id="users" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">👤</span>
+                    User Management
+                </h2>
+                
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="user-search" placeholder="Search users by name or email...">
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Team</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="member-avatar">JD</div>
+                                        <div>John Doe</div>
+                                    </div>
+                                </td>
+                                <td>john.doe@example.com</td>
+                                <td>QuantumPoptarts</td>
+                                <td>Captain</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Today, 10:23 AM</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Profile">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="member-avatar">SC</div>
+                                        <div>Sarah Connor</div>
+                                    </div>
+                                </td>
+                                <td>sarah.connor@example.com</td>
+                                <td>WEH</td>
+                                <td>Captain</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Today, 09:45 AM</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Profile">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="member-avatar">MS</div>
+                                        <div>Mike Smith</div>
+                                    </div>
+                                </td>
+                                <td>mike.smith@example.com</td>
+                                <td>Code Breakers</td>
+                                <td>Captain</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Today, 09:12 AM</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Profile">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="member-avatar">LJ</div>
+                                        <div>Lisa Jones</div>
+                                    </div>
+                                </td>
+                                <td>lisa.jones@example.com</td>
+                                <td>Cyber Warriors</td>
+                                <td>Captain</td>
+                                <td><span class="status-badge status-inactive">Inactive</span></td>
+                                <td>2 days ago</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Profile">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="member-avatar">AJ</div>
+                                        <div>Alex Johnson</div>
+                                    </div>
+                                </td>
+                                <td>alex.johnson@example.com</td>
+                                <td>Binary Ninjas</td>
+                                <td>Member</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>Never</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn" title="View Profile">👁️</button>
+                                    <button class="action-btn delete" title="Delete">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Join Requests Tab -->
+        <div id="requests" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">📨</span>
+                    Join Requests
+                </h2>
+                
+                <div class="join-requests">
+                    <div class="request-item">
+                        <div class="request-info">
+                            <div class="request-user">Robert Brown (robert.brown@example.com)</div>
+                            <div class="request-message">Request to join: QuantumPoptarts</div>
+                            <div class="request-message">"I have experience in web exploitation and cryptography. Would love to contribute to your team!"</div>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn btn-primary btn-sm approve-request">Approve</button>
+                            <button class="btn btn-danger btn-sm reject-request">Reject</button>
+                        </div>
+                    </div>
+                    
+                    <div class="request-item">
+                        <div class="request-info">
+                            <div class="request-user">Emily Wilson (emily.wilson@example.com)</div>
+                            <div class="request-message">Request to join: Code Breakers</div>
+                            <div class="request-message">"I'm skilled in forensics and reverse engineering. Looking for a team to compete with."</div>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn btn-primary btn-sm approve-request">Approve</button>
+                            <button class="btn btn-danger btn-sm reject-request">Reject</button>
+                        </div>
+                    </div>
+                    
+                    <div class="request-item">
+                        <div class="request-info">
+                            <div class="request-user">Daniel Lee (daniel.lee@example.com)</div>
+                            <div class="request-message">Request to join: WEH</div>
+                            <div class="request-message">"I notice your team is full, but I have extensive experience in OT/ICS security if you're considering expanding."</div>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn btn-secondary btn-sm" disabled>Team Full</button>
+                            <button class="btn btn-danger btn-sm reject-request">Reject</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="empty-state" id="no-requests" style="display: none;">
+                    <div class="empty-icon">📭</div>
+                    <h3>No pending requests</h3>
+                    <p>All join requests have been processed.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">⚙️</span>
+                    Team Configuration
+                </h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Maximum Team Size</label>
+                    <select class="form-control">
+                        <option value="2">2 members</option>
+                        <option value="3">3 members</option>
+                        <option value="4" selected>4 members</option>
+                        <option value="5">5 members</option>
+                        <option value="6">6 members</option>
+                        <option value="8">8 members</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Default Team Visibility</label>
+                    <select class="form-control">
+                        <option value="public" selected>Public - Anyone can find and request to join</option>
+                        <option value="private">Private - Only people with team code can join</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" checked> Allow users to create multiple teams
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" checked> Require admin approval for team creation
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox"> Allow team captains to remove members
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" checked> Notify admins of new join requests
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary">Reset to Defaults</button>
+                    <button class="btn btn-primary" id="save-settings">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Team Modal -->
+    <div class="modal" id="create-team-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Team</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Team Name</label>
+                <input type="text" class="form-control" placeholder="Enter team name">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Team Description</label>
+                <textarea class="form-control" placeholder="Describe the team's focus or expertise"></textarea>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Team Captain</label>
+                    <select class="form-control">
+                        <option>John Doe (john.doe@example.com)</option>
+                        <option>Sarah Connor (sarah.connor@example.com)</option>
+                        <option>Mike Smith (mike.smith@example.com)</option>
+                        <option>Lisa Jones (lisa.jones@example.com)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Maximum Members</label>
+                    <select class="form-control">
+                        <option value="4" selected>4 members</option>
+                        <option value="5">5 members</option>
+                        <option value="6">6 members</option>
+                        <option value="8">8 members</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Initial Members</label>
+                <select class="form-control" multiple style="height: 120px;">
+                    <option>John Doe (john.doe@example.com)</option>
+                    <option>Sarah Connor (sarah.connor@example.com)</option>
+                    <option>Mike Smith (mike.smith@example.com)</option>
+                    <option>Lisa Jones (lisa.jones@example.com)</option>
+                    <option>Alex Johnson (alex.johnson@example.com)</option>
+                    <option>Robert Brown (robert.brown@example.com)</option>
+                </select>
+                <div class="form-helper">Hold Ctrl/Cmd to select multiple members</div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Cancel</button>
+                <button class="btn btn-primary">Create Team</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const createTeamBtn = document.getElementById('create-team-btn');
+            const createTeamModal = document.getElementById('create-team-modal');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const saveSettingsBtn = document.getElementById('save-settings');
+            const approveRequestBtns = document.querySelectorAll('.approve-request');
+            const rejectRequestBtns = document.querySelectorAll('.reject-request');
+            const deleteBtns = document.querySelectorAll('.action-btn.delete');
+            
+            // Tab functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Create team modal
+            createTeamBtn.addEventListener('click', function() {
+                createTeamModal.style.display = 'flex';
+            });
+            
+            // Close modals
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    createTeamModal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === createTeamModal) {
+                    createTeamModal.style.display = 'none';
+                }
+            });
+            
+            // Save settings
+            saveSettingsBtn.addEventListener('click', function() {
+                showSuccess('Team settings updated successfully');
+            });
+            
+            // Approve join requests
+            approveRequestBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const requestItem = this.closest('.request-item');
+                    const userName = requestItem.querySelector('.request-user').textContent;
+                    
+                    // Simulate API call
+                    this.innerHTML = 'Approving...';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        showSuccess(`Join request from ${userName} approved`);
+                        requestItem.remove();
+                        
+                        // Check if no requests left
+                        const requestsContainer = document.querySelector('.join-requests');
+                        if (requestsContainer.children.length === 0) {
+                            document.getElementById('no-requests').style.display = 'block';
+                        }
+                    }, 1000);
+                });
+            });
+            
+            // Reject join requests
+            rejectRequestBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const requestItem = this.closest('.request-item');
+                    const userName = requestItem.querySelector('.request-user').textContent;
+                    
+                    if (confirm(`Reject join request from ${userName}?`)) {
+                        // Simulate API call
+                        this.innerHTML = 'Rejecting...';
+                        this.disabled = true;
+                        
+                        setTimeout(() => {
+                            showSuccess(`Join request from ${userName} rejected`);
+                            requestItem.remove();
+                            
+                            // Check if no requests left
+                            const requestsContainer = document.querySelector('.join-requests');
+                            if (requestsContainer.children.length === 0) {
+                                document.getElementById('no-requests').style.display = 'block';
+                            }
+                        }, 1000);
+                    }
+                });
+            });
+            
+            // Delete actions
+            deleteBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const itemName = row.querySelector('td:first-child').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete ${itemName}? This action cannot be undone.`)) {
+                        // Simulate API call
+                        row.style.opacity = '0.5';
+                        
+                        setTimeout(() => {
+                            row.remove();
+                            showSuccess(`${itemName} deleted successfully`);
+                        }, 500);
+                    }
+                });
+            });
+            
+            // Search functionality
+            const teamSearch = document.getElementById('team-search');
+            const userSearch = document.getElementById('user-search');
+            
+            teamSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#teams tbody tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+            
+            userSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#users tbody tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Helper functions
+            function showSuccess(message) {
+                successMessage.textContent = `✓ ${message}`;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = `✗ ${message}`;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Initialize
+            console.log('Admin Team Management Page Loaded');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRDF Global - Admin Scoreboard Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a102b;
+            --secondary-bg: #2d1b4e;
+            --accent-color: #8a4fff;
+            --accent-light: #a67cff;
+            --accent-dark: #6b30e6;
+            --text-primary: #f0e6ff;
+            --text-secondary: #c2b0e6;
+            --border-color: #4a2d7a;
+            --card-bg: #35215a;
+            --success-color: #6fcf97;
+            --warning-color: #f2c94c;
+            --danger-color: #eb5757;
+            --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+            --admin-color: #ff6b6b;
+            --first-place: #ffd700;
+            --second-place: #c0c0c0;
+            --third-place: #cd7f32;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .admin-badge {
+            background: var(--admin-color);
+            color: white;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 12px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d93636;
+            transform: translateY(-2px);
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--accent-light);
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Scoreboard Styles */
+        .scoreboard-container {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+        
+        .scoreboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            background: rgba(138, 79, 255, 0.1);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .scoreboard-header h2 {
+            font-size: 24px;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .btn-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-toggle:hover {
+            background: var(--accent-dark);
+        }
+        
+        .scoreboard-content {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .scoreboard-row {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .scoreboard-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .scoreboard-row.first-place {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
+            border-left: 4px solid var(--first-place);
+        }
+        
+        .scoreboard-row.second-place {
+            background: linear-gradient(90deg, rgba(192, 192, 192, 0.1) 0%, transparent 100%);
+            border-left: 4px solid var(--second-place);
+        }
+        
+        .scoreboard-row.third-place {
+            background: linear-gradient(90deg, rgba(205, 127, 50, 0.1) 0%, transparent 100%);
+            border-left: 4px solid var(--third-place);
+        }
+        
+        .rank {
+            width: 60px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .first-place .rank {
+            color: var(--first-place);
+        }
+        
+        .second-place .rank {
+            color: var(--second-place);
+        }
+        
+        .third-place .rank {
+            color: var(--third-place);
+        }
+        
+        .team-name {
+            flex: 1;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .team-score {
+            width: 120px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .team-movement {
+            width: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .team-movement.up {
+            color: var(--success-color);
+        }
+        
+        .team-movement.down {
+            color: var(--danger-color);
+        }
+        
+        .team-movement.stable {
+            color: var(--warning-color);
+        }
+        
+        .scoreboard-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.3s;
+            padding: 5px;
+        }
+        
+        .action-btn:hover {
+            color: var(--accent-light);
+        }
+        
+        .action-btn.delete:hover {
+            color: var(--danger-color);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .success-message {
+            background: rgba(111, 207, 151, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background: rgba(235, 87, 87, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 16, 43, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .scoreboard-controls {
+                flex-direction: column;
+            }
+            
+            .scoreboard-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                CRDF Global <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div style="flex: 1;">
+                <h1 class="page-title">Scoreboard Management</h1>
+                <p class="page-subtitle">Admin controls for managing live scoreboard, rankings, and scoring</p>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary">
+                    <span>📥</span>
+                    Export Scoreboard
+                </button>
+                <button class="btn btn-primary" id="refresh-scoreboard">
+                    <span>🔄</span>
+                    Refresh Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div class="success-message" id="success-message">
+            ✓ Operation completed successfully!
+        </div>
+        
+        <div class="error-message" id="error-message">
+            ✗ There was an error processing your request.
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Active Teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">6,242</div>
+                <div class="stat-label">Leading Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">1,247</div>
+                <div class="stat-label">Total Submissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">78%</div>
+                <div class="stat-label">Active Participation</div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <div class="tab active" data-tab="scoreboard">Live Scoreboard</div>
+            <div class="tab" data-tab="ranking">Ranking Controls</div>
+            <div class="tab" data-tab="scoring">Scoring System</div>
+            <div class="tab" data-tab="display">Display Settings</div>
+        </div>
+
+        <!-- Live Scoreboard Tab -->
+        <div id="scoreboard" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">🏆</span>
+                    Live Scoreboard Preview
+                </h2>
+                
+                <div class="scoreboard-controls">
+                    <button class="btn btn-primary" id="toggle-scoreboard">Hide Scoreboard</button>
+                    <button class="btn btn-secondary" id="freeze-scoreboard">Freeze Rankings</button>
+                    <button class="btn btn-secondary" id="reset-scoreboard">Reset Scoreboard</button>
+                    <button class="btn btn-danger" id="clear-scoreboard">Clear All Scores</button>
+                </div>
+                
+                <div class="scoreboard-container">
+                    <div class="scoreboard-header">
+                        <h2>Live Scoreboard</h2>
+                        <div>
+                            <span style="color: var(--text-secondary); margin-right: 15px;">Last updated: <span id="last-updated">Just now</span></span>
+                            <button id="public-toggle" class="btn-toggle">Public View: ON</button>
+                        </div>
+                    </div>
+                    
+                    <div class="scoreboard-content" id="scoreboard-content">
+                        <div class="scoreboard-row first-place">
+                            <div class="rank">1st</div>
+                            <div class="team-name">QuantumPoptarts</div>
+                            <div class="team-score">6,242pts</div>
+                            <div class="team-movement up">↑</div>
+                        </div>
+                        
+                        <div class="scoreboard-row second-place">
+                            <div class="rank">2nd</div>
+                            <div class="team-name">WEH</div>
+                            <div class="team-score">5,995pts</div>
+                            <div class="team-movement down">↓</div>
+                        </div>
+                        
+                        <div class="scoreboard-row third-place">
+                            <div class="rank">3rd</div>
+                            <div class="team-name">TeamName-of-MyChoice</div>
+                            <div class="team-score">5,258pts</div>
+                            <div class="team-movement stable">→</div>
+                        </div>
+                        
+                        <div class="scoreboard-row">
+                            <div class="rank">4th</div>
+                            <div class="team-name">The Undecideds</div>
+                            <div class="team-score">3,489pts</div>
+                            <div class="team-movement up">↑</div>
+                        </div>
+                        
+                        <div class="scoreboard-row">
+                            <div class="rank">5th</div>
+                            <div class="team-name">Geren</div>
+                            <div class="team-score">3,125pts</div>
+                            <div class="team-movement down">↓</div>
+                        </div>
+                        
+                        <div class="scoreboard-row">
+                            <div class="rank">6th</div>
+                            <div class="team-name">Goreme</div>
+                            <div class="team-score">2,845pts</div>
+                            <div class="team-movement up">↑</div>
+                        </div>
+                        
+                        <div class="scoreboard-row">
+                            <div class="rank">7th</div>
+                            <div class="team-name">Binary Ninjas</div>
+                            <div class="team-score">2,120pts</div>
+                            <div class="team-movement stable">→</div>
+                        </div>
+                        
+                        <div class="scoreboard-row">
+                            <div class="rank">8th</div>
+                            <div class="team-name">Code Breakers</div>
+                            <div class="team-score">1,845pts</div>
+                            <div class="team-movement up">↑</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="simulate-update">Simulate Score Update</button>
+                    <button class="btn btn-primary" id="save-scoreboard">Save Current State</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ranking Controls Tab -->
+        <div id="ranking" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">📊</span>
+                    Ranking Management
+                </h2>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team Name</th>
+                                <th>Score</th>
+                                <th>Movement</th>
+                                <th>Last Activity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>QuantumPoptarts</td>
+                                <td><input type="number" class="form-control" value="6242" style="width: 100px; display: inline;"></td>
+                                <td>
+                                    <select class="form-control" style="width: 80px; display: inline;">
+                                        <option value="up">↑ Up</option>
+                                        <option value="down">↓ Down</option>
+                                        <option value="stable" selected>→ Stable</option>
+                                    </select>
+                                </td>
+                                <td>2 minutes ago</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn delete" title="Remove">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>WEH</td>
+                                <td><input type="number" class="form-control" value="5995" style="width: 100px; display: inline;"></td>
+                                <td>
+                                    <select class="form-control" style="width: 80px; display: inline;">
+                                        <option value="up">↑ Up</option>
+                                        <option value="down" selected>↓ Down</option>
+                                        <option value="stable">→ Stable</option>
+                                    </select>
+                                </td>
+                                <td>5 minutes ago</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn delete" title="Remove">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>TeamName-of-MyChoice</td>
+                                <td><input type="number" class="form-control" value="5258" style="width: 100px; display: inline;"></td>
+                                <td>
+                                    <select class="form-control" style="width: 80px; display: inline;">
+                                        <option value="up">↑ Up</option>
+                                        <option value="down">↓ Down</option>
+                                        <option value="stable" selected>→ Stable</option>
+                                    </select>
+                                </td>
+                                <td>15 minutes ago</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn delete" title="Remove">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>The Undecideds</td>
+                                <td><input type="number" class="form-control" value="3489" style="width: 100px; display: inline;"></td>
+                                <td>
+                                    <select class="form-control" style="width: 80px; display: inline;">
+                                        <option value="up" selected>↑ Up</option>
+                                        <option value="down">↓ Down</option>
+                                        <option value="stable">→ Stable</option>
+                                    </select>
+                                </td>
+                                <td>8 minutes ago</td>
+                                <td class="action-cell">
+                                    <button class="action-btn" title="Edit">✏️</button>
+                                    <button class="action-btn delete" title="Remove">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary">Add New Team</button>
+                    <button class="btn btn-primary" id="update-rankings">Update All Rankings</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">⚙️</span>
+                    Ranking Settings
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Ranking Algorithm</label>
+                        <select class="form-control">
+                            <option selected>Standard (Points based)</option>
+                            <option>Time-weighted (Earlier solves get bonus)</option>
+                            <option>Difficulty-weighted (Harder challenges worth more)</option>
+                            <option>Custom formula</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tiebreaker Method</label>
+                        <select class="form-control">
+                            <option selected>Last submission time</option>
+                            <option>First submission time</option>
+                            <option>Number of challenges solved</option>
+                            <option>Average solve time</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" checked> Show rank movement indicators
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox"> Highlight top 3 teams with special styling
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" checked> Update rankings in real-time
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scoring System Tab -->
+        <div id="scoring" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">🎯</span>
+                    Scoring Configuration
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Base Points (Easy Challenges)</label>
+                        <input type="number" class="form-control" value="100" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Base Points (Medium Challenges)</label>
+                        <input type="number" class="form-control" value="250" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Base Points (Hard Challenges)</label>
+                        <input type="number" class="form-control" value="500" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Dynamic Scoring</label>
+                    <select class="form-control">
+                        <option selected>Enabled (Points decrease as more teams solve)</option>
+                        <option>Disabled (Fixed point values)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Bonus Points</label>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <label class="form-label">
+                            <input type="checkbox" checked> First blood (first solve)
+                        </label>
+                        <label class="form-label">
+                            <input type="checkbox"> Speed bonus (based on solve time)
+                        </label>
+                        <label class="form-label">
+                            <input type="checkbox" checked> Full completion bonus
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Penalty System</label>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <label class="form-label">
+                            <input type="checkbox" checked> Incorrect submission penalty
+                        </label>
+                        <label class="form-label">
+                            <input type="checkbox"> Hint usage penalty
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary">Reset to Defaults</button>
+                    <button class="btn btn-primary" id="save-scoring">Save Scoring Configuration</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">📈</span>
+                    Score Adjustments
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Select Team</label>
+                        <select class="form-control" id="adjust-team">
+                            <option>QuantumPoptarts</option>
+                            <option>WEH</option>
+                            <option>TeamName-of-MyChoice</option>
+                            <option>The Undecideds</option>
+                            <option>Geren</option>
+                            <option>Goreme</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adjustment Type</label>
+                        <select class="form-control" id="adjust-type">
+                            <option value="add">Add Points</option>
+                            <option value="subtract">Subtract Points</option>
+                            <option value="set">Set Points</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Points</label>
+                        <input type="number" class="form-control" id="adjust-points" value="0" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Reason for Adjustment</label>
+                    <input type="text" class="form-control" id="adjust-reason" placeholder="Enter reason for score adjustment">
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-danger" id="apply-adjustment">Apply Score Adjustment</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display Settings Tab -->
+        <div id="display" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">👁️</span>
+                    Display Settings
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Scoreboard Title</label>
+                        <input type="text" class="form-control" value="Live Scoreboard">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Update Frequency</label>
+                        <select class="form-control">
+                            <option value="10">10 seconds</option>
+                            <option value="30" selected>30 seconds</option>
+                            <option value="60">1 minute</option>
+                            <option value="300">5 minutes</option>
+                            <option value="manual">Manual updates only</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Teams to Display</label>
+                    <select class="form-control">
+                        <option value="10">Top 10 teams</option>
+                        <option value="25" selected>Top 25 teams</option>
+                        <option value="50">Top 50 teams</option>
+                        <option value="all">All teams</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Public Visibility</label>
+                    <div>
+                        <label class="form-label">
+                            <input type="radio" name="visibility" checked> Public (visible to all)
+                        </label>
+                        <label class="form-label">
+                            <input type="radio" name="visibility"> Private (admin only)
+                        </label>
+                        <label class="form-label">
+                            <input type="radio" name="visibility"> Participants only
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Display Options</label>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <label class="form-label">
+                            <input type="checkbox" checked> Show team movement indicators
+                        </label>
+                        <label class="form-label">
+                            <input type="checkbox" checked> Highlight top 3 teams
+                        </label>
+                        <label class="form-label">
+                            <input type="checkbox"> Show solve statistics
+                        </label>
+                        <label class="form-label">
+                            <input type="checkbox"> Show last update time
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary">Reset Display Settings</button>
+                    <button class="btn btn-primary" id="save-display">Save Display Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const toggleScoreboardBtn = document.getElementById('toggle-scoreboard');
+            const freezeScoreboardBtn = document.getElementById('freeze-scoreboard');
+            const resetScoreboardBtn = document.getElementById('reset-scoreboard');
+            const clearScoreboardBtn = document.getElementById('clear-scoreboard');
+            const publicToggleBtn = document.getElementById('public-toggle');
+            const simulateUpdateBtn = document.getElementById('simulate-update');
+            const saveScoreboardBtn = document.getElementById('save-scoreboard');
+            const updateRankingsBtn = document.getElementById('update-rankings');
+            const saveScoringBtn = document.getElementById('save-scoring');
+            const applyAdjustmentBtn = document.getElementById('apply-adjustment');
+            const saveDisplayBtn = document.getElementById('save-display');
+            const refreshScoreboardBtn = document.getElementById('refresh-scoreboard');
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const scoreboardContent = document.getElementById('scoreboard-content');
+            const lastUpdated = document.getElementById('last-updated');
+            
+            let scoreboardVisible = true;
+            let scoreboardFrozen = false;
+            let publicViewEnabled = true;
+            
+            // Tab functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Toggle scoreboard visibility
+            toggleScoreboardBtn.addEventListener('click', function() {
+                scoreboardVisible = !scoreboardVisible;
+                
+                if (scoreboardVisible) {
+                    scoreboardContent.style.display = 'block';
+                    this.innerHTML = 'Hide Scoreboard';
+                    showSuccess('Scoreboard is now visible');
+                } else {
+                    scoreboardContent.style.display = 'none';
+                    this.innerHTML = 'Show Scoreboard';
+                    showSuccess('Scoreboard is now hidden');
+                }
+            });
+            
+            // Freeze/unfreeze scoreboard
+            freezeScoreboardBtn.addEventListener('click', function() {
+                scoreboardFrozen = !scoreboardFrozen;
+                
+                if (scoreboardFrozen) {
+                    this.innerHTML = 'Unfreeze Rankings';
+                    this.classList.add('btn-danger');
+                    showSuccess('Scoreboard rankings are now frozen');
+                } else {
+                    this.innerHTML = 'Freeze Rankings';
+                    this.classList.remove('btn-danger');
+                    showSuccess('Scoreboard rankings are now live');
+                }
+            });
+            
+            // Reset scoreboard
+            resetScoreboardBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset the scoreboard? This will set all scores to zero but keep team records.')) {
+                    // Simulate API call
+                    this.innerHTML = 'Resetting...';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        showSuccess('Scoreboard has been reset');
+                        this.innerHTML = 'Reset Scoreboard';
+                        this.disabled = false;
+                        updateLastUpdated();
+                    }, 1500);
+                }
+            });
+            
+            // Clear scoreboard
+            clearScoreboardBtn.addEventListener('click', function() {
+                if (confirm('WARNING: This will clear ALL scores and cannot be undone. Are you sure?')) {
+                    // Simulate API call
+                    this.innerHTML = 'Clearing...';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        showSuccess('All scores have been cleared');
+                        this.innerHTML = 'Clear All Scores';
+                        this.disabled = false;
+                        updateLastUpdated();
+                    }, 1500);
+                }
+            });
+            
+            // Toggle public view
+            publicToggleBtn.addEventListener('click', function() {
+                publicViewEnabled = !publicViewEnabled;
+                
+                if (publicViewEnabled) {
+                    this.innerHTML = 'Public View: ON';
+                    this.classList.remove('btn-secondary');
+                    this.classList.add('btn-toggle');
+                    showSuccess('Public scoreboard view is now enabled');
+                } else {
+                    this.innerHTML = 'Public View: OFF';
+                    this.classList.remove('btn-toggle');
+                    this.classList.add('btn-secondary');
+                    showSuccess('Public scoreboard view is now disabled');
+                }
+            });
+            
+            // Simulate score update
+            simulateUpdateBtn.addEventListener('click', function() {
+                // Randomly adjust some scores to simulate live updates
+                const rows = scoreboardContent.querySelectorAll('.scoreboard-row');
+                
+                rows.forEach(row => {
+                    // 30% chance to update a score
+                    if (Math.random() < 0.3) {
+                        const scoreElement = row.querySelector('.team-score');
+                        const movementElement = row.querySelector('.team-movement');
+                        const currentScore = parseInt(scoreElement.textContent);
+                        const change = Math.floor(Math.random() * 100) + 10;
+                        
+                        // Randomly decide if score goes up or down
+                        if (Math.random() < 0.7) {
+                            // Score increase
+                            const newScore = currentScore + change;
+                            scoreElement.textContent = `${newScore}pts`;
+                            
+                            // Update movement indicator
+                            movementElement.textContent = '↑';
+                            movementElement.className = 'team-movement up';
+                        } else {
+                            // Score decrease (less common)
+                            const newScore = Math.max(0, currentScore - change);
+                            scoreElement.textContent = `${newScore}pts`;
+                            
+                            // Update movement indicator
+                            movementElement.textContent = '↓';
+                            movementElement.className = 'team-movement down';
+                        }
+                    }
+                });
+                
+                updateLastUpdated();
+                showSuccess('Simulated score update completed');
+            });
+            
+            // Save scoreboard state
+            saveScoreboardBtn.addEventListener('click', function() {
+                // Simulate API call
+                this.innerHTML = 'Saving...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    showSuccess('Scoreboard state saved successfully');
+                    this.innerHTML = 'Save Current State';
+                    this.disabled = false;
+                }, 1000);
+            });
+            
+            // Update rankings
+            updateRankingsBtn.addEventListener('click', function() {
+                // Simulate API call
+                this.innerHTML = 'Updating...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    showSuccess('Team rankings updated successfully');
+                    this.innerHTML = 'Update All Rankings';
+                    this.disabled = false;
+                    updateLastUpdated();
+                }, 1500);
+            });
+            
+            // Save scoring configuration
+            saveScoringBtn.addEventListener('click', function() {
+                // Simulate API call
+                this.innerHTML = 'Saving...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    showSuccess('Scoring configuration saved successfully');
+                    this.innerHTML = 'Save Scoring Configuration';
+                    this.disabled = false;
+                }, 1000);
+            });
+            
+            // Apply score adjustment
+            applyAdjustmentBtn.addEventListener('click', function() {
+                const team = document.getElementById('adjust-team').value;
+                const type = document.getElementById('adjust-type').value;
+                const points = parseInt(document.getElementById('adjust-points').value);
+                const reason = document.getElementById('adjust-reason').value;
+                
+                if (!points || points <= 0) {
+                    showError('Please enter a valid point value');
+                    return;
+                }
+                
+                if (!reason) {
+                    showError('Please provide a reason for the adjustment');
+                    return;
+                }
+                
+                // Simulate API call
+                this.innerHTML = 'Applying...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    showSuccess(`Score adjustment applied to ${team}`);
+                    this.innerHTML = 'Apply Score Adjustment';
+                    this.disabled = false;
+                    
+                    // Clear form
+                    document.getElementById('adjust-points').value = '';
+                    document.getElementById('adjust-reason').value = '';
+                    
+                    updateLastUpdated();
+                }, 1000);
+            });
+            
+            // Save display settings
+            saveDisplayBtn.addEventListener('click', function() {
+                // Simulate API call
+                this.innerHTML = 'Saving...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    showSuccess('Display settings saved successfully');
+                    this.innerHTML = 'Save Display Settings';
+                    this.disabled = false;
+                }, 1000);
+            });
+            
+            // Refresh scoreboard data
+            refreshScoreboardBtn.addEventListener('click', function() {
+                // Simulate API call
+                this.innerHTML = 'Refreshing...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    showSuccess('Scoreboard data refreshed');
+                    this.innerHTML = 'Refresh Data';
+                    this.disabled = false;
+                    updateLastUpdated();
+                }, 1000);
+            });
+            
+            // Helper functions
+            function updateLastUpdated() {
+                const now = new Date();
+                lastUpdated.textContent = now.toLocaleTimeString();
+            }
+            
+            function showSuccess(message) {
+                successMessage.textContent = `✓ ${message}`;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = `✗ ${message}`;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Initialize
+            updateLastUpdated();
+            console.log('Admin Scoreboard Management Page Loaded');
+        });
+    </script>
+</body>
+</html>

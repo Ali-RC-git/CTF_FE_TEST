@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRDF Global - Team Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a102b;
+            --secondary-bg: #2d1b4e;
+            --accent-color: #8a4fff;
+            --accent-light: #a67cff;
+            --accent-dark: #6b30e6;
+            --text-primary: #f0e6ff;
+            --text-secondary: #c2b0e6;
+            --border-color: #4a2d7a;
+            --card-bg: #35215a;
+            --success-color: #6fcf97;
+            --warning-color: #f2c94c;
+            --danger-color: #eb5757;
+            --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .page-title {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .team-management-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .team-management-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            transition: border-color 0.3s;
+            font-size: 16px;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(138, 79, 255, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        .team-code-display {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .team-code {
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-light);
+            letter-spacing: 2px;
+        }
+        
+        .btn-copy {
+            background: rgba(138, 79, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            color: var(--accent-light);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-copy:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        
+        .search-input {
+            padding-left: 45px;
+        }
+        
+        .teams-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .team-item {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .team-item:hover {
+            border-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+        
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .team-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .team-meta {
+            display: flex;
+            gap: 15px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .team-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .team-members {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .member-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .invite-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .invite-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+        
+        .invite-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .invite-input {
+            flex: 1;
+        }
+        
+        .form-helper {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .success-message {
+            background: rgba(111, 207, 151, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background: rgba(235, 87, 87, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .my-teams-section {
+            margin-top: 40px;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-light);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .back-button:hover {
+            color: var(--accent-color);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 16, 43, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                CRDF Global
+            </div>
+            <h1 class="page-title">Team Management</h1>
+            <p class="page-subtitle">Create a new team or join an existing one to compete in the CTF</p>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div class="success-message" id="success-message">
+            ✓ Team created successfully! Share the team code with your teammates.
+        </div>
+        
+        <div class="error-message" id="error-message">
+            ✗ There was an error processing your request. Please try again.
+        </div>
+
+        <div class="team-management-container">
+            <!-- Create Team Card -->
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">🚀</span>
+                    Create New Team
+                </h2>
+                
+                <form id="create-team-form">
+                    <div class="form-group">
+                        <label class="form-label" for="team-name">Team Name</label>
+                        <input type="text" class="form-input" id="team-name" placeholder="Enter your team name" required>
+                        <div class="form-helper">Choose a unique name that represents your team</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="team-description">Team Description (Optional)</label>
+                        <textarea class="form-textarea" id="team-description" placeholder="Describe your team's focus or expertise"></textarea>
+                        <div class="form-helper">This will help other participants understand your team's approach</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="team-visibility">Team Visibility</label>
+                        <select class="form-select" id="team-visibility">
+                            <option value="public">Public - Anyone can find and request to join</option>
+                            <option value="private">Private - Only people with team code can join</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="max-members">Maximum Team Size</label>
+                        <select class="form-select" id="max-members">
+                            <option value="4">4 members (Recommended)</option>
+                            <option value="5">5 members</option>
+                            <option value="6">6 members</option>
+                            <option value="8">8 members (Maximum)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <span>🏗️</span>
+                        Create Team
+                    </button>
+                </form>
+                
+                <!-- Team Code Display (shown after creation) -->
+                <div class="team-code-display" id="team-code-display" style="display: none;">
+                    <div>
+                        <div class="form-label">Your Team Code</div>
+                        <div class="team-code" id="team-code-value">ABCD1234</div>
+                    </div>
+                    <button class="btn-copy" id="copy-team-code">Copy</button>
+                </div>
+            </div>
+
+            <!-- Join Team Card -->
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">👥</span>
+                    Join Existing Team
+                </h2>
+                
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="form-input search-input" id="team-search" placeholder="Search for teams...">
+                </div>
+                
+                <div class="teams-list" id="teams-list">
+                    <!-- Team items will be populated here -->
+                    <div class="team-item">
+                        <div class="team-header">
+                            <div class="team-name">QuantumPoptarts</div>
+                            <div class="team-meta">
+                                <span>4/6 members</span>
+                                <span>Rank: 1st</span>
+                            </div>
+                        </div>
+                        <div class="team-description">
+                            Focused on web exploitation and cryptography challenges. Looking for forensics experts!
+                        </div>
+                        <div class="team-members">
+                            <div class="member-avatar">JD</div>
+                            <div class="member-avatar">AJ</div>
+                            <div class="member-avatar">BS</div>
+                            <div class="member-avatar">CD</div>
+                            <div class="member-avatar empty">+2</div>
+                        </div>
+                        <button class="btn btn-primary btn-request-join" data-team="QuantumPoptarts">
+                            Request to Join
+                        </button>
+                    </div>
+                    
+                    <div class="team-item">
+                        <div class="team-header">
+                            <div class="team-name">WEH</div>
+                            <div class="team-meta">
+                                <span>5/5 members</span>
+                                <span>Rank: 2nd</span>
+                            </div>
+                        </div>
+                        <div class="team-description">
+                            Well-rounded team excelling in all categories. Currently at full capacity.
+                        </div>
+                        <div class="team-members">
+                            <div class="member-avatar">MK</div>
+                            <div class="member-avatar">RJ</div>
+                            <div class="member-avatar">SP</div>
+                            <div class="member-avatar">TL</div>
+                            <div class="member-avatar">KW</div>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            Team Full
+                        </button>
+                    </div>
+                    
+                    <div class="team-item">
+                        <div class="team-header">
+                            <div class="team-name">Code Breakers</div>
+                            <div class="team-meta">
+                                <span>2/4 members</span>
+                                <span>Rank: 15th</span>
+                            </div>
+                        </div>
+                        <div class="team-description">
+                            New team looking for members interested in binary exploitation and reverse engineering.
+                        </div>
+                        <div class="team-members">
+                            <div class="member-avatar">AB</div>
+                            <div class="member-avatar">CD</div>
+                            <div class="member-avatar empty">+2</div>
+                        </div>
+                        <button class="btn btn-primary btn-request-join" data-team="Code Breakers">
+                            Request to Join
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="invite-section">
+                    <div class="invite-title">Have a team code?</div>
+                    <div class="invite-input-group">
+                        <input type="text" class="form-input invite-input" id="team-code-input" placeholder="Enter team code">
+                        <button class="btn btn-primary" id="join-with-code">Join</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Teams Section -->
+        <div class="my-teams-section">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">⭐</span>
+                    My Teams
+                </h2>
+                
+                <div id="my-teams-list">
+                    <div class="team-item">
+                        <div class="team-header">
+                            <div class="team-name">Cyber Warriors</div>
+                            <div class="team-meta">
+                                <span>You are: Team Captain</span>
+                                <span>Rank: 5th</span>
+                            </div>
+                        </div>
+                        <div class="team-description">
+                            Your current active team. Focused on comprehensive cybersecurity challenges.
+                        </div>
+                        <div class="team-members">
+                            <div class="member-avatar">You</div>
+                            <div class="member-avatar">AJ</div>
+                            <div class="member-avatar">BS</div>
+                            <div class="member-avatar">CD</div>
+                        </div>
+                        <div class="team-actions">
+                            <button class="btn btn-primary">Manage Team</button>
+                            <button class="btn btn-secondary">View Progress</button>
+                        </div>
+                    </div>
+                    
+                    <div class="empty-state" id="no-teams-message" style="display: none;">
+                        <div class="empty-icon">👥</div>
+                        <h3>You're not in any teams yet</h3>
+                        <p>Create a new team or join an existing one to get started with the competition.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Request Modal -->
+    <div class="modal" id="join-request-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Request to Join Team</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <p>You are requesting to join: <strong id="request-team-name">Team Name</strong></p>
+            <div class="form-group">
+                <label class="form-label">Message to Team Captain (Optional)</label>
+                <textarea class="form-textarea" id="join-message" placeholder="Introduce yourself and your skills..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-request">Cancel</button>
+                <button class="btn btn-primary" id="confirm-request">Send Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const createTeamForm = document.getElementById('create-team-form');
+            const teamCodeDisplay = document.getElementById('team-code-display');
+            const teamCodeValue = document.getElementById('team-code-value');
+            const copyTeamCodeBtn = document.getElementById('copy-team-code');
+            const joinWithCodeBtn = document.getElementById('join-with-code');
+            const teamCodeInput = document.getElementById('team-code-input');
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const joinRequestModal = document.getElementById('join-request-modal');
+            const requestTeamName = document.getElementById('request-team-name');
+            const cancelRequestBtn = document.getElementById('cancel-request');
+            const confirmRequestBtn = document.getElementById('confirm-request');
+            const closeModalBtn = document.querySelector('.close-modal');
+            
+            // Generate random team code
+            function generateTeamCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                for (let i = 0; i < 8; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+            
+            // Create team form submission
+            createTeamForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const teamName = document.getElementById('team-name').value;
+                const teamDescription = document.getElementById('team-description').value;
+                const visibility = document.getElementById('team-visibility').value;
+                const maxMembers = document.getElementById('max-members').value;
+                
+                // Simulate API call to create team
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<span>⏳</span> Creating Team...';
+                submitBtn.disabled = true;
+                
+                // Simulate API delay
+                setTimeout(() => {
+                    const teamCode = generateTeamCode();
+                    
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                    
+                    // Show team code
+                    teamCodeValue.textContent = teamCode;
+                    teamCodeDisplay.style.display = 'flex';
+                    
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    // Add to my teams (in a real app, this would come from the backend)
+                    const myTeamsList = document.getElementById('my-teams-list');
+                    const noTeamsMessage = document.getElementById('no-teams-message');
+                    
+                    noTeamsMessage.style.display = 'none';
+                    
+                    // Scroll to my teams section
+                    document.querySelector('.my-teams-section').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                    
+                }, 1500);
+            });
+            
+            // Copy team code to clipboard
+            copyTeamCodeBtn.addEventListener('click', function() {
+                const teamCode = teamCodeValue.textContent;
+                navigator.clipboard.writeText(teamCode).then(() => {
+                    const originalText = this.textContent;
+                    this.textContent = 'Copied!';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 2000);
+                });
+            });
+            
+            // Join with team code
+            joinWithCodeBtn.addEventListener('click', function() {
+                const code = teamCodeInput.value.trim().toUpperCase();
+                
+                if (!code) {
+                    showError('Please enter a team code');
+                    return;
+                }
+                
+                if (code.length !== 8) {
+                    showError('Team code must be 8 characters long');
+                    return;
+                }
+                
+                // Simulate API call to join team
+                this.innerHTML = '<span>⏳</span> Joining...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    // Simulate success
+                    showSuccess(`Successfully joined team with code: ${code}`);
+                    
+                    // Reset button
+                    this.innerHTML = 'Join';
+                    this.disabled = false;
+                    teamCodeInput.value = '';
+                    
+                    // In a real app, would update the UI with the new team
+                }, 1000);
+            });
+            
+            // Team search functionality
+            const teamSearch = document.getElementById('team-search');
+            const teamsList = document.getElementById('teams-list');
+            const teamItems = teamsList.querySelectorAll('.team-item');
+            
+            teamSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                teamItems.forEach(item => {
+                    const teamName = item.querySelector('.team-name').textContent.toLowerCase();
+                    const teamDescription = item.querySelector('.team-description').textContent.toLowerCase();
+                    
+                    if (teamName.includes(searchTerm) || teamDescription.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Join request buttons
+            const joinButtons = document.querySelectorAll('.btn-request-join');
+            let currentTeam = '';
+            
+            joinButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    currentTeam = this.getAttribute('data-team');
+                    requestTeamName.textContent = currentTeam;
+                    joinRequestModal.style.display = 'flex';
+                });
+            });
+            
+            // Modal controls
+            cancelRequestBtn.addEventListener('click', function() {
+                joinRequestModal.style.display = 'none';
+            });
+            
+            closeModalBtn.addEventListener('click', function() {
+                joinRequestModal.style.display = 'none';
+            });
+            
+            confirmRequestBtn.addEventListener('click', function() {
+                const message = document.getElementById('join-message').value;
+                
+                // Simulate API call to send join request
+                this.innerHTML = '<span>⏳</span> Sending...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    showSuccess(`Join request sent to ${currentTeam}`);
+                    joinRequestModal.style.display = 'none';
+                    this.innerHTML = 'Send Request';
+                    this.disabled = false;
+                    document.getElementById('join-message').value = '';
+                }, 1000);
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === joinRequestModal) {
+                    joinRequestModal.style.display = 'none';
+                }
+            });
+            
+            // Helper functions
+            function showSuccess(message) {
+                successMessage.textContent = `✓ ${message}`;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = `✗ ${message}`;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Initialize
+            console.log('Team Management Page Loaded');
+        });
+    </script>
+</body>
+</html>

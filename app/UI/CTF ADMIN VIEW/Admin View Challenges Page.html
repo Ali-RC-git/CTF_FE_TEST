@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRDF Global - Admin Challenge Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a102b;
+            --secondary-bg: #2d1b4e;
+            --accent-color: #8a4fff;
+            --accent-light: #a67cff;
+            --accent-dark: #6b30e6;
+            --text-primary: #f0e6ff;
+            --text-secondary: #c2b0e6;
+            --border-color: #4a2d7a;
+            --card-bg: #35215a;
+            --success-color: #6fcf97;
+            --warning-color: #f2c94c;
+            --danger-color: #eb5757;
+            --gradient: linear-gradient(135deg, #6b30e6 0%, #8a4fff 100%);
+            --admin-color: #ff6b6b;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            background: var(--gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .admin-badge {
+            background: var(--admin-color);
+            color: white;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 12px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 79, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d93636;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--accent-light);
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .question-item {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        
+        .question-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        
+        .question-points {
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        .step-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .step-list li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .flag-format {
+            background: rgba(111, 207, 151, 0.1);
+            border: 1px solid var(--success-color);
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .hint-section {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .hint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .hint-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+        
+        .hint-cost {
+            background: var(--warning-color);
+            color: var(--primary-bg);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .artifacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .artifact-item {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .artifact-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .artifact-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+        
+        .artifact-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .highlight-box {
+            background: rgba(138, 79, 255, 0.1);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-draft {
+            background: rgba(242, 201, 76, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .status-published {
+            background: rgba(111, 207, 151, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-archived {
+            background: rgba(235, 87, 87, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .challenge-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .difficulty {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .difficulty.easy {
+            background: rgba(111, 207, 151, 0.2);
+            color: var(--success-color);
+        }
+        
+        .difficulty.medium {
+            background: rgba(242, 201, 76, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .difficulty.hard {
+            background: rgba(235, 87, 87, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .points {
+            color: var(--accent-light);
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                CRDF Global <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div style="flex: 1;">
+                <h1 class="page-title">Challenge Management</h1>
+                <p class="page-subtitle">Create and manage cybersecurity challenges for the training platform</p>
+                
+                <div class="challenge-meta">
+                    <div class="meta-item">
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>🔒</span>
+                        <span>OT/ICS Security</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>⏱️</span>
+                        <span>Estimated: 45-60 mins</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>🏆</span>
+                        <span class="points">40 pts total</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="status-badge status-published">Published</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="btn btn-secondary">
+                    <span>📋</span>
+                    Back to Admin Panel
+                </a>
+                <button class="btn btn-primary" id="save-challenge">
+                    <span>💾</span>
+                    Save Changes
+                </button>
+                <button class="btn btn-danger" id="delete-challenge">
+                    <span>🗑️</span>
+                    Delete Challenge
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <div class="tab active" data-tab="basic">Basic Info</div>
+            <div class="tab" data-tab="scenario">Scenario & Artifacts</div>
+            <div class="tab" data-tab="questions">Questions & Hints</div>
+            <div class="tab" data-tab="preview">Preview</div>
+        </div>
+
+        <!-- Basic Info Tab -->
+        <div id="basic" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">📝</span>
+                    Challenge Information
+                </h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Challenge Title</label>
+                    <input type="text" class="form-control" value="Midnight Credentials - OT Edition">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-control">
+                            <option>OT/ICS Security</option>
+                            <option>Network Security</option>
+                            <option>Web Application Security</option>
+                            <option>Digital Forensics</option>
+                            <option>Cryptography</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Difficulty</label>
+                        <select class="form-control">
+                            <option>Easy</option>
+                            <option selected>Medium</option>
+                            <option>Hard</option>
+                            <option>Expert</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Total Points</label>
+                        <input type="number" class="form-control" value="40" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time Estimate (minutes)</label>
+                        <input type="number" class="form-control" value="60" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-control">
+                        <option>Draft</option>
+                        <option selected>Published</option>
+                        <option>Archived</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Challenge Description</label>
+                    <textarea class="form-control">A water treatment plant's engineering workstation (which has access to PLC programming and HMI configuration) shows signs of unauthorized activity. An attacker appears to have used compromised credentials to log into an engineering workstation, elevated privileges, and accessed control-related files.</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scenario & Artifacts Tab -->
+        <div id="scenario" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">🎯</span>
+                    Scenario Details
+                </h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Scenario Text</label>
+                    <textarea class="form-control" rows="6">A water treatment plant's engineering workstation (which has access to PLC programming and HMI configuration) shows signs of unauthorized activity. An attacker appears to have used compromised credentials to log into an engineering workstation, elevated privileges, and accessed control-related files. The artifacts provided are offline and safe for training.</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">OT/ICS Context Notes</label>
+                    <textarea class="form-control" rows="4">- The engineering workstation is used by OT staff to manage PLC setpoints and HMI screens.
+- Compromise of service accounts on this host can directly affect process control.
+- For safety, all exercises are offline and use synthetic artifacts.</textarea>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">📁</span>
+                    Challenge Artifacts
+                </h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Artifacts Description</label>
+                    <textarea class="form-control">Download and analyze these files to solve the challenge:</textarea>
+                </div>
+                
+                <div class="artifacts-grid">
+                    <div class="artifact-item">
+                        <div class="artifact-name">wordlist_small.txt</div>
+                        <div class="artifact-desc">Password wordlist for cracking</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">john_input_rawmd5.txt</div>
+                        <div class="artifact-desc">MD5 hashes for password cracking</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">auth.log</div>
+                        <div class="artifact-desc">Authentication logs from engineering workstation</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">investigation_notes.txt</div>
+                        <div class="artifact-desc">Initial investigation findings</div>
+                    </div>
+                    <div class="artifact-item">
+                        <div class="artifact-name">passwd_copy.txt</div>
+                        <div class="artifact-desc">User account information</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary">
+                        <span>➕</span>
+                        Add Artifact
+                    </button>
+                    <button class="btn btn-primary">
+                        <span>📥</span>
+                        Upload Artifacts
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions & Hints Tab -->
+        <div id="questions" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">❓</span>
+                    Challenge Questions
+                </h2>
+                
+                <div class="questions-list">
+                    <!-- Question 1 -->
+                    <div class="question-item">
+                        <div class="question-header">
+                            <div class="question-title">Q1. Crack the password for svc_backup</div>
+                            <div class="question-points">30 pts</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Question Text</label>
+                            <textarea class="form-control">Crack the password for svc_backup (an OT service account used for PLC backups) and submit the flag.</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Flag Format</label>
+                            <input type="text" class="form-control" value="cracked_svc_backup_&lt;password&gt;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Correct Answer</label>
+                            <input type="text" class="form-control" value="cracked_svc_backup_water123">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Step-by-step Instructions</label>
+                            <textarea class="form-control">1. Use john with --format=raw-md5 and the provided wordlist to crack john_input_rawmd5.txt
+2. Identify the password for svc_backup
+3. Submit as cracked_svc_backup_&lt;password&gt;</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Why This Matters (OT Context)</label>
+                            <textarea class="form-control">Compromised OT service accounts can be used to alter PLCs or exfiltrate control logic.</textarea>
+                        </div>
+                        
+                        <!-- Hint Section for Question 1 -->
+                        <div class="hint-section">
+                            <div class="hint-header">
+                                <div class="hint-title">Hint Configuration</div>
+                                <div class="hint-cost">Cost: <input type="number" value="5" min="0" style="width: 50px; background: transparent; border: none; color: var(--primary-bg); font-weight: bold;"> points</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Hint Text</label>
+                                <textarea class="form-control">The password is related to the facility type. Check the wordlist carefully.</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Max Hints Allowed</label>
+                                <input type="number" class="form-control" value="3" min="0" style="width: 100px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="question-item">
+                        <div class="question-header">
+                            <div class="question-title">Q2. Identify Attacker IP Address</div>
+                            <div class="question-points">10 pts</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Question Text</label>
+                            <textarea class="form-control">Which IP did the attacker use to log in as svc_backup on the engineering workstation?</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Flag Format</label>
+                            <input type="text" class="form-control" value="ip_&lt;address&gt;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Correct Answer</label>
+                            <input type="text" class="form-control" value="ip_192.168.1.205">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Step-by-step Instructions</label>
+                            <textarea class="form-control">1. Open auth.log and find the Accepted password entry for svc_backup
+2. Copy the IP address associated with that successful login</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Why This Matters (OT Context)</label>
+                            <textarea class="form-control">Identifying the source helps isolate the intrusion path and block attacker access.</textarea>
+                        </div>
+                        
+                        <!-- Hint Section for Question 2 -->
+                        <div class="hint-section">
+                            <div class="hint-header">
+                                <div class="hint-title">Hint Configuration</div>
+                                <div class="hint-cost">Cost: <input type="number" value="5" min="0" style="width: 50px; background: transparent; border: none; color: var(--primary-bg); font-weight: bold;"> points</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Hint Text</label>
+                                <textarea class="form-control">Look for "Accepted password" entries in auth.log and note the IP format.</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Max Hints Allowed</label>
+                                <input type="number" class="form-control" value="3" min="0" style="width: 100px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <span>➕</span>
+                        Add Question
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Tab -->
+        <div id="preview" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">👁️</span>
+                    Student View Preview
+                </h2>
+                
+                <p>This is how students will see the challenge. The hints system will automatically deduct points when students use hints.</p>
+                
+                <div class="highlight-box">
+                    <strong>Note:</strong> In the student view, the hint button will display: "Get Hint (-X pts)" where X is the point cost you configured for each question.
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <span>🔍</span>
+                        View Full Student Preview
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-icon">📊</span>
+                    Challenge Analytics
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <div style="background: var(--secondary-bg); border-radius: 10px; padding: 20px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">247</div>
+                            <div style="color: var(--text-secondary);">Total Attempts</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div style="background: var(--secondary-bg); border-radius: 10px; padding: 20px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">78%</div>
+                            <div style="color: var(--text-secondary);">Completion Rate</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div style="background: var(--secondary-bg); border-radius: 10px; padding: 20px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">156</div>
+                            <div style="color: var(--text-secondary);">Hint Uses</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div style="background: var(--secondary-bg); border-radius: 10px; padding: 20px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">42 min</div>
+                            <div style="color: var(--text-secondary);">Avg. Time</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Actions -->
+        <div class="card">
+            <div class="form-actions">
+                <button class="btn btn-secondary">
+                    <span>↶</span>
+                    Discard Changes
+                </button>
+                <button class="btn btn-primary" id="publish-challenge">
+                    <span>🚀</span>
+                    Publish Challenge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show corresponding content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Save challenge
+        document.getElementById('save-challenge').addEventListener('click', function() {
+            // In a real app, this would save to a database
+            alert('Challenge saved successfully!');
+        });
+        
+        // Delete challenge
+        document.getElementById('delete-challenge').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this challenge? This action cannot be undone.')) {
+                alert('Challenge deleted. Redirecting to challenge list...');
+                // In a real app, this would redirect to the challenges list
+            }
+        });
+        
+        // Publish challenge
+        document.getElementById('publish-challenge').addEventListener('click', function() {
+            if (confirm('Publish this challenge to make it available to students?')) {
+                alert('Challenge published successfully!');
+                // In a real app, this would update the status and redirect
+            }
+        });
+        
+        // Initialize with some sample data
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Admin challenge management page loaded');
+        });
+    </script>
+</body>
+</html>
