@@ -1,0 +1,8 @@
+[build]
+  # Let Netlify run the standard Next build; the Netlify Next plugin will
+  # handle the Next-specific output and functions.
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
